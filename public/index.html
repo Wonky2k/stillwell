@@ -294,7 +294,7 @@ footer{text-align:center;padding:16px 0 40px;font-size:.72rem;color:var(--stone)
   <div class="card">
     <div id="welcome-back" style="display:none"></div>
     <h2 id="setup-heading">Welcome to Stillwell</h2>
-    <p id="setup-para">Thoughtful, personalised wellness reflections based on how you actually feel. Paste your Anthropic API key to begin.</p>
+    <p id="setup-para">Thoughtful, personalised wellness reflections based on how you actually feel. Enter your first name to begin.</p>
     <div class="igroup"><label>First name</label><input type="text" id="user-name" placeholder="e.g. Sarah" autocomplete="given-name"/><p class="note">So your team can speak to you directly.</p></div>
     
     <button class="btn" onclick="startApp()">Continue &rarr;</button>
@@ -817,7 +817,7 @@ function renderWelcomeBack(){
   if(!sessions||sessions.length===0){
     wb.style.display='none';
     heading.textContent='Welcome to Stillwell';
-    para.textContent='Thoughtful, personalised wellness reflections based on how you actually feel. Paste your Anthropic API key to begin.';
+    para.textContent='Thoughtful, personalised wellness reflections based on how you actually feel. Enter your first name to begin.';
     return;
   }
   var last=sessions[0];
@@ -1304,9 +1304,10 @@ async function getFeedback(){
     var leadActionItems=[];
     if(lp.act){
       lp.act.split('\n').filter(function(l){return l.trim();}).forEach(function(line){
+        var clean=line.replace(/\*\*/g,'').replace(/^[-•*]\s*/,'').trim();
         leadTags.forEach(function(t){
-          if(line.toUpperCase().indexOf(t.key+':')===0){
-            leadActionItems.push({label:t.label,cls:persona.tagCls[t.i],text:line.substring(t.key.length+1).trim()});
+          if(clean.toUpperCase().indexOf(t.key+':')===0){
+            leadActionItems.push({label:t.label,cls:persona.tagCls[t.i],text:clean.substring(t.key.length+1).trim()});
           }
         });
       });
