@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stillwell</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#F5F0E8;--stone:#D4C9B5;--bark:#8B7355;--earth:#4A3728;
+  --moss:#6B7B5E;--dusk:#9B8FA0;--text:#2C2018;--tl:#7A6A58;--white:#FDFAF5;
+  --sl-p:#2C4A52;--sl-l:#EAF2F4;--sl-m:#7AAAB5;--sl-b:#B0D0D8;
+  --st-p:#5C4A7A;--st-l:#F0ECF8;--st-m:#A090C0;--st-b:#C8B8E0;
+  --nu-p:#7A4A1A;--nu-l:#FBF3E8;--nu-m:#C08040;--nu-b:#DFB880;
+  --ex-p:#3A5A3A;--ex-l:#EAF4EA;--ex-m:#70A870;--ex-b:#A8CCA8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(ellipse at 20% 20%,rgba(107,123,94,.08) 0%,transparent 50%),
+  radial-gradient(ellipse at 80% 80%,rgba(155,143,160,.08) 0%,transparent 50%);}
+.wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:0 24px;}
+header{padding:48px 0 32px;text-align:center;}
+.logo{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;letter-spacing:.08em;color:var(--earth);}
+.logo span{color:var(--moss);font-style:italic;}
+.tagline{font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;color:var(--tl);margin-top:6px;}
+.card{background:var(--white);border-radius:16px;padding:36px 40px;border:1px solid var(--stone);box-shadow:0 4px 32px rgba(74,55,40,.06);margin-bottom:16px;}
+.card h2{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;color:var(--earth);margin-bottom:12px;}
+.card p{font-size:.9rem;color:var(--tl);line-height:1.7;margin-bottom:20px;}
+.card p:last-child{margin-bottom:0;}
+.igroup{margin-bottom:20px;}
+.igroup label{display:block;font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--bark);margin-bottom:8px;font-weight:500;}
+.igroup .sub{font-size:.72rem;color:var(--tl);margin-bottom:8px;font-style:italic;}
+.igroup input{width:100%;padding:14px 18px;border:1px solid var(--stone);border-radius:10px;background:var(--cream);font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--text);outline:none;transition:border-color .2s;}
+.igroup input:focus{border-color:var(--bark);}
+.note{font-size:.76rem;color:var(--tl);margin-top:8px;font-style:italic;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.btn{width:100%;padding:16px;background:var(--earth);color:var(--cream);border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.9rem;cursor:pointer;transition:background .2s;}
+.btn:hover{background:var(--bark);}
+.btn-out{padding:14px 28px;background:transparent;color:var(--bark);border:1px solid var(--stone);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.88rem;cursor:pointer;transition:all .2s;flex:1;text-align:center;}
+.btn-out:hover{border-color:var(--bark);}
+.btn-ghost{padding:12px 24px;background:transparent;color:var(--tl);border:1px solid var(--stone);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.84rem;cursor:pointer;transition:all .2s;}
+.btn-ghost:hover{border-color:var(--bark);color:var(--bark);}
+.screen{display:none;}.screen.active{display:block;animation:fadeIn .5s ease;}
+.greeting{text-align:center;padding:16px 0 28px;}
+.greeting .tlabel{font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--tl);margin-bottom:10px;}
+.greeting h1{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:300;color:var(--earth);}
+.greeting h1 em{font-style:italic;color:var(--moss);}
+.greeting p{font-size:.9rem;color:var(--tl);margin-top:8px;}
+.shead{text-align:center;padding:16px 0 28px;}
+.shead .slabel{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--moss);margin-bottom:10px;}
+.shead h2{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:300;color:var(--earth);line-height:1.3;}
+.shead h2 em{font-style:italic;color:var(--moss);}
+.shead p{font-size:.88rem;color:var(--tl);margin-top:10px;line-height:1.6;}
+.ptag{display:inline-block;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-bottom:14px;font-weight:500;}
+.ptag-sleep{background:rgba(107,123,94,.12);color:var(--moss);}
+.ptag-stress{background:rgba(155,143,160,.15);color:var(--dusk);}
+.ptag-nutrition{background:rgba(139,115,85,.12);color:var(--bark);}
+.ptag-exercise{background:rgba(74,55,40,.1);color:var(--earth);}
+.qnum{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dusk);margin-bottom:10px;}
+.qtext{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:300;color:var(--earth);line-height:1.4;margin-bottom:20px;}
+.opts{display:flex;gap:8px;flex-wrap:wrap;}
+.obtn{padding:8px 16px;border:1px solid var(--stone);border-radius:24px;background:transparent;font-family:'DM Sans',sans-serif;font-size:.83rem;color:var(--tl);cursor:pointer;transition:all .2s;}
+.obtn:hover{border-color:var(--bark);color:var(--bark);}
+.obtn.sel{background:var(--earth);border-color:var(--earth);color:var(--cream);}
+textarea{width:100%;padding:14px 16px;border:1px solid var(--stone);border-radius:10px;background:var(--cream);font-family:'DM Sans',sans-serif;font-size:.88rem;color:var(--text);outline:none;resize:none;min-height:80px;line-height:1.6;transition:border-color .2s;}
+textarea:focus{border-color:var(--bark);}
+textarea::placeholder{color:var(--stone);font-style:italic;}
+.otag{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dusk);background:rgba(155,143,160,.12);padding:3px 8px;border-radius:4px;margin-left:8px;vertical-align:middle;}
+.submit-area{margin-top:24px;text-align:center;padding-bottom:16px;}
+.submit-area .btn{max-width:300px;margin:0 auto;}
+.ds-intro{text-align:center;padding:16px 0 28px;}
+.ds-intro h2{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--earth);margin-bottom:12px;}
+.ds-intro p{font-size:.9rem;color:var(--tl);line-height:1.7;}
+.source-options{display:flex;flex-direction:column;gap:12px;margin:20px 0;}
+.sbtn{display:flex;align-items:center;gap:16px;padding:20px 24px;background:var(--white);border:1px solid var(--stone);border-radius:14px;cursor:pointer;transition:all .2s;text-align:left;width:100%;font-family:'DM Sans',sans-serif;}
+.sbtn:hover{border-color:var(--bark);box-shadow:0 4px 16px rgba(74,55,40,.08);}
+.sbtn.sel{border-color:var(--earth);background:rgba(74,55,40,.04);}
+.s-icon{font-size:1.8rem;min-width:40px;text-align:center;}
+.s-info{flex:1;}
+.s-title{font-size:.95rem;color:var(--earth);font-weight:500;margin-bottom:3px;}
+.s-desc{font-size:.8rem;color:var(--tl);line-height:1.5;}
+.s-badge{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:4px;background:rgba(107,123,94,.15);color:var(--moss);font-weight:500;}
+.sc-step{display:flex;gap:16px;margin-bottom:18px;align-items:flex-start;}
+.sc-num{min-width:28px;height:28px;border-radius:50%;background:var(--earth);color:var(--cream);font-size:.78rem;display:flex;align-items:center;justify-content:center;font-weight:500;margin-top:1px;}
+.sc-text{font-size:.88rem;color:var(--tl);line-height:1.6;flex:1;}
+.sc-text strong{color:var(--text);}
+.sc-text code{background:rgba(74,55,40,.08);padding:2px 6px;border-radius:4px;font-size:.82rem;color:var(--earth);font-family:monospace;}
+.url-box{background:var(--cream);border:1px solid var(--stone);border-radius:8px;padding:12px 16px;font-family:monospace;font-size:.75rem;color:var(--earth);word-break:break-all;margin:8px 0;line-height:1.7;}
+.m-intro{text-align:center;padding:24px 0 28px;}
+.m-intro h2{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--earth);margin-bottom:12px;}
+.m-intro p{font-size:.9rem;color:var(--tl);line-height:1.7;max-width:480px;margin:0 auto;}
+.m-choice{display:flex;gap:12px;margin:28px 0 8px;}
+.mcard{background:var(--white);border-radius:14px;padding:24px 28px;border:1px solid var(--stone);margin-bottom:12px;display:flex;align-items:flex-start;gap:20px;}
+.mval-block{text-align:center;min-width:80px;}
+.mval{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;color:var(--earth);line-height:1;}
+.munit{font-size:.72rem;color:var(--tl);margin-top:3px;}
+.minfo{flex:1;}
+.mname{font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--bark);margin-bottom:6px;font-weight:500;}
+.mexpl{font-size:.84rem;color:var(--tl);line-height:1.65;}
+.mctx{font-size:.8rem;color:var(--moss);margin-top:6px;font-style:italic;}
+.loading{text-align:center;padding:32px 0;}
+.dots{display:flex;gap:8px;justify-content:center;margin-bottom:16px;}
+.dots span{width:8px;height:8px;border-radius:50%;background:var(--bark);animation:pulse 1.4s ease-in-out infinite;}
+.dots span:nth-child(2){animation-delay:.2s;}.dots span:nth-child(3){animation-delay:.4s;}
+.ltext{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:300;color:var(--tl);font-style:italic;}
+.err{background:rgba(155,143,160,.12);border:1px solid var(--dusk);border-radius:10px;padding:14px 18px;font-size:.84rem;color:var(--earth);margin-top:14px;line-height:1.6;}
+.detected{background:rgba(107,123,94,.1);border:1px solid rgba(107,123,94,.3);border-radius:10px;padding:18px 20px;font-size:.88rem;color:var(--moss);margin-bottom:16px;line-height:1.6;}
+.detected strong{color:var(--earth);display:block;margin-bottom:6px;font-size:.95rem;}
+footer{text-align:center;padding:16px 0 40px;font-size:.72rem;color:var(--stone);}
+/* ── Chat thread ── */
+.chat-header{text-align:center;padding:20px 0 28px;}
+.chat-header .ch-label{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--tl);margin-bottom:8px;}
+.chat-header .ch-title{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;color:var(--earth);}
+.chat-thread{display:flex;flex-direction:column;gap:18px;padding-bottom:4px;}
+.msg{display:flex;gap:12px;align-items:flex-start;animation:fadeIn .45s ease;}
+.msg-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.15rem;flex-shrink:0;margin-top:22px;border:1.5px solid transparent;}
+.msg-avatar-sleep    {background:var(--sl-l);border-color:var(--sl-b);}
+.msg-avatar-stress   {background:var(--st-l);border-color:var(--st-b);}
+.msg-avatar-nutrition{background:var(--nu-l);border-color:var(--nu-b);}
+.msg-avatar-exercise {background:var(--ex-l);border-color:var(--ex-b);}
+.msg-content{flex:1;min-width:0;}
+.msg-meta{margin-bottom:5px;}
+.msg-name{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;display:inline;}
+.msg-name-sleep    {color:var(--sl-p);}
+.msg-name-stress   {color:var(--st-p);}
+.msg-name-nutrition{color:var(--nu-p);}
+.msg-name-exercise {color:var(--ex-p);}
+.msg-tagline{font-size:.7rem;color:var(--tl);font-style:italic;margin-left:6px;display:inline;}
+/* Bubble is now a button-like tappable card */
+.msg-bubble{border-radius:4px 18px 18px 18px;padding:18px 22px;border-width:1px;border-style:solid;cursor:pointer;transition:box-shadow .2s,transform .1s;-webkit-tap-highlight-color:transparent;}
+.msg-bubble:hover{box-shadow:0 3px 14px rgba(0,0,0,.1);transform:translateY(-1px);}
+.msg-bubble:active{transform:translateY(0);}
+.msg-bubble-sleep    {background:var(--sl-l);border-color:var(--sl-b);color:#1A3038;}
+.msg-bubble-stress   {background:var(--st-l);border-color:var(--st-b);color:#2A1E3A;}
+.msg-bubble-nutrition{background:var(--nu-l);border-color:var(--nu-b);color:#3A2010;}
+.msg-bubble-exercise {background:var(--ex-l);border-color:var(--ex-b);color:#1A301A;}
+.msg-bubble-loading  {background:var(--white);border-color:var(--stone);color:var(--tl);cursor:default;}
+.msg-bubble-loading:hover{box-shadow:none;transform:none;}
+/* Summary line inside bubble */
+.bubble-summary{font-size:.91rem;line-height:1.75;}
+/* Expand hint */
+.bubble-hint{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top-width:1px;border-top-style:solid;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;font-weight:500;opacity:.65;}
+.bubble-hint-sleep    {border-top-color:var(--sl-b);}
+.bubble-hint-stress   {border-top-color:var(--st-b);}
+.bubble-hint-nutrition{border-top-color:var(--nu-b);}
+.bubble-hint-exercise {border-top-color:var(--ex-b);}
+.bubble-hint-arrow{transition:transform .25s;font-size:.85rem;font-style:normal;}
+.bubble-hint-arrow.open{transform:rotate(180deg);}
+/* Accordion detail panel */
+.bubble-detail{display:none;margin-top:10px;padding:16px 22px 18px;border-radius:0 0 18px 18px;border-width:0 1px 1px 1px;border-style:solid;font-size:.88rem;line-height:1.8;}
+.bubble-detail.open{display:block;animation:fadeIn .3s ease;}
+.bubble-detail-sleep    {background:var(--sl-l);border-color:var(--sl-b);color:#1A3038;}
+.bubble-detail-stress   {background:var(--st-l);border-color:var(--st-b);color:#2A1E3A;}
+.bubble-detail-nutrition{background:var(--nu-l);border-color:var(--nu-b);color:#3A2010;}
+.bubble-detail-exercise {background:var(--ex-l);border-color:var(--ex-b);color:#1A301A;}
+.bubble-detail p{margin-bottom:12px;}.bubble-detail p:last-child{margin-bottom:0;}
+/* Action inside detail */
+.detail-action{margin-top:14px;padding-top:12px;border-top-width:1px;border-top-style:solid;}
+.detail-action-sleep    {border-top-color:var(--sl-b);}
+.detail-action-stress   {border-top-color:var(--st-b);}
+.detail-action-nutrition{border-top-color:var(--nu-b);}
+.detail-action-exercise {border-top-color:var(--ex-b);}
+/* Summary action card */
+.summary-card{background:var(--white);border:1px solid var(--stone);border-radius:16px;padding:26px 30px;margin-top:4px;margin-bottom:16px;box-shadow:0 2px 20px rgba(74,55,40,.07);animation:fadeIn .5s ease;}
+.summary-top{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.summary-pin{font-size:.95rem;opacity:.55;}
+.summary-heading{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:300;color:var(--earth);}
+.summary-sub{font-size:.77rem;color:var(--tl);margin-bottom:20px;padding-left:26px;letter-spacing:.03em;}
+.aitem{display:flex;gap:12px;margin-bottom:13px;align-items:flex-start;}
+.aitem:last-child{margin-bottom:0;}
+.atag{font-size:.67rem;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:10px;font-weight:500;min-width:68px;text-align:center;margin-top:3px;flex-shrink:0;white-space:nowrap;}
+.atag-sl-0{background:rgba(44,74,82,.18);color:var(--sl-p);}
+.atag-sl-1{background:rgba(44,74,82,.10);color:var(--sl-p);}
+.atag-sl-2{background:rgba(44,74,82,.06);color:var(--sl-m);}
+.atag-st-0{background:rgba(92,74,122,.18);color:var(--st-p);}
+.atag-st-1{background:rgba(92,74,122,.10);color:var(--st-p);}
+.atag-st-2{background:rgba(92,74,122,.06);color:var(--st-m);}
+.atag-nu-0{background:rgba(122,74,26,.18);color:var(--nu-p);}
+.atag-nu-1{background:rgba(122,74,26,.10);color:var(--nu-p);}
+.atag-nu-2{background:rgba(122,74,26,.06);color:var(--nu-m);}
+.atag-ex-0{background:rgba(58,90,58,.18);color:var(--ex-p);}
+.atag-ex-1{background:rgba(58,90,58,.10);color:var(--ex-p);}
+.atag-ex-2{background:rgba(58,90,58,.06);color:var(--ex-m);}
+.atext{font-size:.87rem;line-height:1.6;color:var(--text);}
+.fb-actions{display:flex;gap:12px;justify-content:center;padding:12px 0 48px;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+/* ── Session memory UI ── */
+.welcome-back{background:var(--white);border:1px solid var(--stone);border-radius:12px;padding:18px 22px;margin-bottom:20px;display:flex;align-items:center;gap:14px;animation:fadeIn .4s ease;}
+.wb-icon{font-size:1.4rem;flex-shrink:0;}
+.wb-text{flex:1;}
+.wb-title{font-size:.84rem;font-weight:500;color:var(--earth);margin-bottom:3px;}
+.wb-sub{font-size:.76rem;color:var(--tl);line-height:1.5;}
+.wb-streak{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--moss);font-weight:500;margin-top:5px;}
+.session-count{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--tl);opacity:.7;margin-left:8px;}
+.milestone-banner{background:linear-gradient(135deg,var(--sl-l),var(--st-l));border:1px solid var(--stone);border-radius:14px;padding:22px 26px;margin-bottom:20px;text-align:center;animation:fadeIn .5s ease;}
+.milestone-icon{font-size:1.8rem;margin-bottom:8px;}
+.milestone-title{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:300;color:var(--earth);margin-bottom:6px;}
+.milestone-sub{font-size:.82rem;color:var(--tl);line-height:1.55;}
+.history-note{font-size:.72rem;color:var(--tl);font-style:italic;text-align:center;margin-bottom:6px;opacity:.7;}
+/* ── Onboarding ── */
+.ob-stage{display:none;animation:fadeIn .4s ease;}
+.ob-stage.active{display:block;}
+.ob-progress{display:flex;gap:6px;justify-content:center;margin-bottom:28px;}
+.ob-dot{width:6px;height:6px;border-radius:50%;background:var(--stone);transition:background .3s;}
+.ob-dot.done{background:var(--moss);}
+.ob-dot.active{background:var(--earth);}
+.ob-intro{text-align:center;padding:8px 0 24px;}
+.ob-intro .ob-icon{font-size:2rem;margin-bottom:12px;}
+.ob-intro h2{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;color:var(--earth);margin-bottom:10px;}
+.ob-intro p{font-size:.88rem;color:var(--tl);line-height:1.7;}
+.ob-textarea{width:100%;padding:14px 18px;border:1px solid var(--stone);border-radius:10px;background:var(--cream);font-family:'DM Sans',sans-serif;font-size:.9rem;color:var(--text);outline:none;resize:vertical;min-height:80px;transition:border-color .2s;line-height:1.6;}
+.ob-textarea:focus{border-color:var(--bark);}
+/* Multi-select chips */
+.ob-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+.ob-chip{padding:9px 14px;border:1px solid var(--stone);border-radius:20px;background:var(--white);font-size:.84rem;color:var(--text);cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;line-height:1.3;}
+.ob-chip:hover{border-color:var(--bark);}
+.ob-chip.sel{border-color:var(--earth);background:var(--earth);color:var(--cream);}
+.ob-optional-label{font-size:.72rem;color:var(--tl);font-style:italic;margin-bottom:6px;}
+.ob-q{margin-bottom:22px;}
+.ob-qlabel{font-size:.8rem;color:var(--earth);font-weight:500;margin-bottom:10px;line-height:1.5;}
+.ob-opts{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;}
+.ob-opt{padding:11px 16px;border:1px solid var(--stone);border-radius:9px;background:var(--white);font-size:.87rem;color:var(--text);cursor:pointer;text-align:left;transition:all .15s;font-family:'DM Sans',sans-serif;}
+.ob-opt:hover{border-color:var(--bark);}
+.ob-opt.sel{border-color:var(--earth);background:var(--earth);color:var(--cream);}
+.ob-opt-note{font-size:.72rem;color:var(--tl);margin-top:2px;font-style:italic;}
+/* Team intro cards */
+.team-grid{display:flex;flex-direction:column;gap:12px;margin:20px 0;}
+.team-card{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:12px;border:1px solid transparent;}
+.team-card-sleep{background:var(--sl-l);border-color:var(--sl-b);}
+.team-card-stress{background:var(--st-l);border-color:var(--st-b);}
+.team-card-nutrition{background:var(--nu-l);border-color:var(--nu-b);}
+.team-card-exercise{background:var(--ex-l);border-color:var(--ex-b);}
+.team-card-avatar{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;border:1.5px solid transparent;}
+.team-card-avatar-sleep{background:var(--sl-l);border-color:var(--sl-b);}
+.team-card-avatar-stress{background:var(--st-l);border-color:var(--st-b);}
+.team-card-avatar-nutrition{background:var(--nu-l);border-color:var(--nu-b);}
+.team-card-avatar-exercise{background:var(--ex-l);border-color:var(--ex-b);}
+.team-card-info{flex:1;}
+.team-card-name{font-size:.82rem;font-weight:600;letter-spacing:.05em;margin-bottom:2px;}
+.team-card-name-sleep{color:var(--sl-p);}
+.team-card-name-stress{color:var(--st-p);}
+.team-card-name-nutrition{color:var(--nu-p);}
+.team-card-name-exercise{color:var(--ex-p);}
+.team-card-tagline{font-size:.75rem;color:var(--tl);font-style:italic;margin-bottom:4px;}
+.team-card-desc{font-size:.78rem;color:var(--text);line-height:1.5;opacity:.85;}
+/* Welcome message bubble */
+.welcome-msg{border-radius:4px 18px 18px 18px;padding:18px 22px;border:1px solid;font-size:.9rem;line-height:1.75;margin:20px 0;animation:fadeIn .5s ease;}
+.welcome-msg-sleep{background:var(--sl-l);border-color:var(--sl-b);color:#1A3038;}
+.welcome-msg-stress{background:var(--st-l);border-color:var(--st-b);color:#2A1E3A;}
+.welcome-msg-nutrition{background:var(--nu-l);border-color:var(--nu-b);color:#3A2010;}
+.welcome-msg-exercise{background:var(--ex-l);border-color:var(--ex-b);color:#1A301A;}
+/* ── History screen ── */
+.hist-header{text-align:center;padding:16px 0 28px;}
+.hist-header h2{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;color:var(--earth);margin-bottom:8px;}
+.hist-header p{font-size:.85rem;color:var(--tl);}
+.hist-origin{background:var(--white);border:1px solid var(--stone);border-radius:14px;padding:22px 26px;margin-bottom:20px;}
+.hist-origin-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--moss);font-weight:500;margin-bottom:10px;}
+.hist-origin-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:300;color:var(--earth);margin-bottom:8px;}
+.hist-origin-why{font-size:.87rem;color:var(--text);line-height:1.7;margin-bottom:14px;font-style:italic;}
+.hist-origin-baseline{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;}
+.hist-bl-item{background:var(--cream);border-radius:8px;padding:8px 12px;}
+.hist-bl-pillar{font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:3px;}
+.hist-bl-val{font-size:.82rem;color:var(--earth);font-weight:500;}
+.hist-pattern{font-size:.78rem;color:var(--tl);text-align:center;margin-bottom:18px;font-style:italic;}
+.hist-session{background:var(--white);border:1px solid var(--stone);border-radius:12px;margin-bottom:10px;overflow:hidden;cursor:pointer;transition:box-shadow .2s;}
+.hist-session:hover{box-shadow:0 2px 12px rgba(74,55,40,.1);}
+.hist-session-top{display:flex;align-items:center;gap:12px;padding:14px 18px;}
+.hist-session-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;border:1.5px solid transparent;}
+.hist-session-avatar-sleep{background:var(--sl-l);border-color:var(--sl-b);}
+.hist-session-avatar-stress{background:var(--st-l);border-color:var(--st-b);}
+.hist-session-avatar-nutrition{background:var(--nu-l);border-color:var(--nu-b);}
+.hist-session-avatar-exercise{background:var(--ex-l);border-color:var(--ex-b);}
+.hist-session-meta{flex:1;min-width:0;}
+.hist-session-top-line{display:flex;align-items:baseline;gap:8px;margin-bottom:3px;}
+.hist-session-num{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);}
+.hist-session-date{font-size:.72rem;color:var(--tl);}
+.hist-session-headline{font-size:.84rem;color:var(--text);line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hist-session-chevron{font-size:.8rem;color:var(--tl);transition:transform .2s;flex-shrink:0;}
+.hist-session-chevron.open{transform:rotate(180deg);}
+.hist-session-detail{display:none;padding:0 18px 16px;border-top:1px solid var(--stone);}
+.hist-session-detail.open{display:block;animation:fadeIn .25s ease;}
+.hist-session-headline-full{font-size:.84rem;color:var(--text);line-height:1.6;margin-bottom:12px;padding-top:14px;font-style:italic;}
+.hist-actions-title{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:8px;}
+.hist-no-sessions{text-align:center;padding:40px 0;color:var(--tl);font-size:.88rem;font-style:italic;}
+@keyframes pulse{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="logo">Still<span>well</span></div><div class="tagline">Wellness without the score</div></header>
+
+<div id="s-setup" class="screen active">
+  <div class="card">
+    <div id="welcome-back" style="display:none"></div>
+    <h2 id="setup-heading">Welcome to Stillwell</h2>
+    <p id="setup-para">Thoughtful, personalised wellness reflections based on how you actually feel. Paste your Anthropic API key to begin.</p>
+    <div class="igroup"><label>First name</label><input type="text" id="user-name" placeholder="e.g. Sarah" autocomplete="given-name"/><p class="note">So your team can speak to you directly.</p></div>
+    
+    <button class="btn" onclick="startApp()">Continue &rarr;</button>
+    <div id="err-setup" class="err" style="display:none"></div>
+    <div id="setup-history-link" style="display:none;text-align:center;margin-top:16px;">
+      <button class="btn-ghost" onclick="showHistory()" style="font-size:.8rem;">View your journey &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Onboarding ── -->
+<div id="s-onboarding" class="screen">
+  <div id="ob-progress-bar" class="ob-progress">
+    <div class="ob-dot active" id="ob-dot-0"></div>
+    <div class="ob-dot" id="ob-dot-1"></div>
+    <div class="ob-dot" id="ob-dot-2"></div>
+    <div class="ob-dot" id="ob-dot-3"></div>
+  </div>
+
+  <!-- Stage 0: Why you're here -->
+  <div class="ob-stage active" id="ob-stage-0">
+    <div class="ob-intro">
+      <div class="ob-icon">🌱</div>
+      <h2>Before we begin</h2>
+      <p>A few quick questions to help your team understand where you're starting from. Tap what feels true — everything is optional.</p>
+    </div>
+    <div class="card">
+      <div class="ob-q">
+        <div class="ob-qlabel">What brought you to Stillwell? <span style="font-weight:400;color:var(--tl)">(pick all that apply)</span></div>
+        <div class="ob-chips" id="ob-why-chips">
+          <button class="ob-chip" onclick="obChip(this,'why')">My sleep is suffering</button>
+          <button class="ob-chip" onclick="obChip(this,'why')">I feel constantly stressed</button>
+          <button class="ob-chip" onclick="obChip(this,'why')">My energy is low</button>
+          <button class="ob-chip" onclick="obChip(this,'why')">I can't focus or think clearly</button>
+          <button class="ob-chip" onclick="obChip(this,'why')">I'm not recovering well</button>
+          <button class="ob-chip" onclick="obChip(this,'why')">My eating habits aren't helping</button>
+          <button class="ob-chip" onclick="obChip(this,'why')">I feel disconnected from my body</button>
+          <button class="ob-chip" onclick="obChip(this,'why')">General burnout</button>
+        </div>
+        <div class="ob-optional-label">Anything to add? (optional)</div>
+        <textarea class="ob-textarea" id="ob-why-text" placeholder="A few words if you'd like..." style="min-height:60px;"></textarea>
+      </div>
+      <div class="ob-q" style="margin-top:20px;">
+        <div class="ob-qlabel">What would feeling better look like? <span style="font-weight:400;color:var(--tl)">(pick all that apply)</span></div>
+        <div class="ob-chips" id="ob-vision-chips">
+          <button class="ob-chip" onclick="obChip(this,'vision')">Waking up feeling rested</button>
+          <button class="ob-chip" onclick="obChip(this,'vision')">Getting through the day without a crash</button>
+          <button class="ob-chip" onclick="obChip(this,'vision')">Feeling calmer under pressure</button>
+          <button class="ob-chip" onclick="obChip(this,'vision')">More energy for people I care about</button>
+          <button class="ob-chip" onclick="obChip(this,'vision')">Feeling in control of my habits</button>
+          <button class="ob-chip" onclick="obChip(this,'vision')">A body that feels strong and capable</button>
+          <button class="ob-chip" onclick="obChip(this,'vision')">Less noise in my head</button>
+          <button class="ob-chip" onclick="obChip(this,'vision')">Just feeling more like myself</button>
+        </div>
+        <div class="ob-optional-label">Anything to add? (optional)</div>
+        <textarea class="ob-textarea" id="ob-vision-text" placeholder="In your own words if you'd like..." style="min-height:60px;"></textarea>
+      </div>
+      <button class="btn" onclick="obNext(0)" style="margin-top:8px;">Continue &rarr;</button>
+      <div id="err-ob-0" class="err" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- Stage 1: Baseline across 4 pillars -->
+  <div class="ob-stage" id="ob-stage-1">
+    <div class="ob-intro">
+      <div class="ob-icon">📍</div>
+      <h2>Your starting point</h2>
+      <p>Honest answers here become the benchmark your team will measure your progress against. Where are you right now, really?</p>
+    </div>
+    <div class="card">
+      <div class="ob-q">
+        <div class="ob-qlabel">🌙 How would you describe your sleep right now?</div>
+        <div class="ob-opts" id="ob-opts-sleep">
+          <button class="ob-opt" onclick="obPick(this,'ob-sleep')">Struggling — I regularly feel unrestored</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-sleep')">Variable — some okay nights, many poor ones</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-sleep')">Moderate — getting by but not thriving</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-sleep')">Generally good — occasional off nights</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-sleep')">Strong — I sleep well and wake rested</button>
+        </div>
+      </div>
+      <div class="ob-q">
+        <div class="ob-qlabel">🌿 How would you describe your stress or mental load right now?</div>
+        <div class="ob-opts" id="ob-opts-stress">
+          <button class="ob-opt" onclick="obPick(this,'ob-stress')">High — it's affecting my daily life</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-stress')">Elevated — carrying more than I'd like</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-stress')">Background hum — manageable but present</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-stress')">Low — mostly on top of things</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-stress')">Calm — feeling grounded and resilient</button>
+        </div>
+      </div>
+      <div class="ob-q">
+        <div class="ob-qlabel">🌾 How would you describe your relationship with food and energy right now?</div>
+        <div class="ob-opts" id="ob-opts-nutrition">
+          <button class="ob-opt" onclick="obPick(this,'ob-nutrition')">Poor — eating is an afterthought or a problem</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-nutrition')">Inconsistent — habits I know aren't helping</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-nutrition')">Moderate — room to improve but okay</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-nutrition')">Pretty good — mostly nourishing choices</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-nutrition')">Strong — food works for me, not against me</button>
+        </div>
+      </div>
+      <div class="ob-q">
+        <div class="ob-qlabel">⚡ How does your body feel in terms of movement and fitness right now?</div>
+        <div class="ob-opts" id="ob-opts-exercise">
+          <button class="ob-opt" onclick="obPick(this,'ob-exercise')">Depleted — moving feels like a lot</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-exercise')">Sluggish — less active than I want to be</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-exercise')">Moderate — some movement, inconsistent</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-exercise')">Active — moving regularly, feeling it</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-exercise')">Strong — training well and feeling capable</button>
+        </div>
+      </div>
+      <button class="btn" onclick="obNext(1)">Continue &rarr;</button>
+      <div id="err-ob-1" class="err" style="display:none"></div>
+    </div>
+  </div>
+
+  <!-- Stage 2: Meet your team -->
+  <div class="ob-stage" id="ob-stage-2">
+    <div class="ob-intro">
+      <div class="ob-icon">👥</div>
+      <h2>Meet your team</h2>
+      <p>Four specialists. Each brings a different lens to how you're doing. After every check-in, they all weigh in — from their own angle.</p>
+    </div>
+    <div class="team-grid">
+      <div class="team-card team-card-sleep">
+        <div class="team-card-avatar team-card-avatar-sleep">🌙</div>
+        <div class="team-card-info">
+          <div class="team-card-name team-card-name-sleep">The Restorer</div>
+          <div class="team-card-tagline">Sleep & recovery</div>
+          <div class="team-card-desc">Calm and unhurried. Thinks in rhythms and cycles. Will never alarm you — but will always be honest about what your body is telling them.</div>
+        </div>
+      </div>
+      <div class="team-card team-card-stress">
+        <div class="team-card-avatar team-card-avatar-stress">🌿</div>
+        <div class="team-card-info">
+          <div class="team-card-name team-card-name-stress">The Steadier</div>
+          <div class="team-card-tagline">Stress & nervous system</div>
+          <div class="team-card-desc">Perceptive and direct. Notices tension you've stopped noticing yourself. Sees stress as information, not failure.</div>
+        </div>
+      </div>
+      <div class="team-card team-card-nutrition">
+        <div class="team-card-avatar team-card-avatar-nutrition">🌾</div>
+        <div class="team-card-info">
+          <div class="team-card-name team-card-name-nutrition">The Nourisher</div>
+          <div class="team-card-tagline">Nutrition & energy</div>
+          <div class="team-card-desc">Practical and curious about patterns. Talks about food as both fuel and pleasure — never preachy, always honest.</div>
+        </div>
+      </div>
+      <div class="team-card team-card-exercise">
+        <div class="team-card-avatar team-card-avatar-exercise">⚡</div>
+        <div class="team-card-info">
+          <div class="team-card-name team-card-name-exercise">The Energiser</div>
+          <div class="team-card-tagline">Movement & strength</div>
+          <div class="team-card-desc">Upbeat but honest. Knows the difference between productive effort and depletion. Will help you find the right kind of movement for where you actually are.</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn" onclick="obNext(2)">Continue &rarr;</button>
+  </div>
+
+  <!-- Stage 3: Welcome message from team -->
+  <div class="ob-stage" id="ob-stage-3">
+    <div class="ob-intro">
+      <div class="ob-icon" id="ob-welcome-icon">🌙</div>
+      <h2>A word from your team</h2>
+      <p id="ob-welcome-intro">One of your team has read what you shared and wants to say something before you begin.</p>
+    </div>
+    <div id="ob-welcome-loading" class="loading" style="padding:24px 0;text-align:center;">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <div class="ltext">Your team is reading what you shared...</div>
+    </div>
+    <div id="ob-welcome-msg" style="display:none"></div>
+    <div id="ob-welcome-actions" style="display:none">
+      <button class="btn" onclick="finishOnboarding()">Begin my first check-in &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── History ── -->
+<div id="s-history" class="screen">
+  <div class="hist-header">
+    <h2>Your journey</h2>
+    <p id="hist-subhead">A record of where you've been.</p>
+  </div>
+  <div id="hist-origin" style="display:none"></div>
+  <div id="hist-pattern" class="hist-pattern" style="display:none"></div>
+  <div id="hist-list"></div>
+  <div style="text-align:center;padding:16px 0 48px;">
+    <button class="btn-ghost" onclick="show('s-setup')">&#8592; Back</button>
+  </div>
+</div>
+
+<div id="s-datasource" class="screen">
+  <div class="ds-intro"><h2>Where should we get your <em>data?</em></h2><p>Stillwell works best with real numbers. Choose how to bring your health data in today.</p></div>
+  <div id="detected-banner" class="detected" style="display:none">
+    <strong>Apple Health data detected!</strong>Your metrics have been pulled from your Shortcut. Tap below to begin.
+    <br><br><button class="btn" style="max-width:280px" onclick="show('s-checkin')">Begin my check-in &rarr;</button>
+  </div>
+  <div class="source-options" id="source-options">
+    <button class="sbtn" onclick="chooseSource('shortcut')" id="btn-shortcut"><div class="s-icon">&#8987;</div><div class="s-info"><div class="s-title">Apple Health via Shortcut</div><div class="s-desc">Automatically pulls real data from Apple Health on your iPhone.</div></div><div class="s-badge">Recommended</div></button>
+    <button class="sbtn" onclick="chooseSource('manual')" id="btn-manual"><div class="s-icon">&#9998;</div><div class="s-info"><div class="s-title">Enter manually</div><div class="s-desc">Type in your own figures from Apple Health or any wearable.</div></div></button>
+    <button class="sbtn" onclick="chooseSource('demo')" id="btn-demo"><div class="s-icon">&#128300;</div><div class="s-info"><div class="s-title">Use demo data</div><div class="s-desc">Run with simulated data to explore how Stillwell works.</div></div></button>
+  </div>
+  <div id="panel-shortcut" class="card" style="display:none">
+    <h2 style="margin-bottom:6px">Setting up your Shortcut</h2>
+    <p style="margin-bottom:20px">Do this once on your iPhone. After that, one tap sends your Apple Health data straight into Stillwell.</p>
+    <div class="sc-step"><div class="sc-num">1</div><div class="sc-text">Open the <strong>Shortcuts</strong> app on your iPhone.</div></div>
+    <div class="sc-step"><div class="sc-num">2</div><div class="sc-text">Tap <strong>+</strong> to create a new Shortcut named <strong>Stillwell Check-in</strong>.</div></div>
+    <div class="sc-step"><div class="sc-num">3</div><div class="sc-text">Add <strong>Find Health Samples</strong> then <strong>Get Details of Health Sample</strong> for: <code>Sleep</code>, <code>Resting HR</code>, <code>HRV</code>, <code>Respiratory Rate</code>, <code>Steps</code>, <code>Active Energy</code>, <code>Exercise Minutes</code>, <code>Stand Hours</code>.</div></div>
+    <div class="sc-step"><div class="sc-num">4</div><div class="sc-text">Add a <strong>URL</strong> action and paste this URL replacing each placeholder with its Shortcut variable:<div class="url-box" id="shortcut-url">Loading...</div></div></div>
+    <div class="sc-step"><div class="sc-num">5</div><div class="sc-text">Add an <strong>Open URLs</strong> action below. Save and add to Home Screen.</div></div>
+    <div style="margin-top:20px"><button class="btn" style="background:var(--moss)" onclick="chooseSource('manual')">Use manual entry instead &rarr;</button></div>
+  </div>
+  <div id="panel-manual" class="card" style="display:none">
+    <h2 style="margin-bottom:6px">Enter your metrics</h2>
+    <p>Open your Health app and enter last night's figures. Leave blank anything you don't have.</p>
+    <div class="grid2">
+      <div class="igroup"><label>Sleep</label><div class="sub">Hours e.g. 7.5</div><input type="number" id="m-sleep" placeholder="7.5" step="0.1" min="0" max="24"/></div>
+      <div class="igroup"><label>Resting HR</label><div class="sub">bpm</div><input type="number" id="m-rhr" placeholder="58" min="30" max="120"/></div>
+    </div>
+    <div class="grid2">
+      <div class="igroup"><label>HRV</label><div class="sub">ms</div><input type="number" id="m-hrv" placeholder="42" min="0" max="200"/></div>
+      <div class="igroup"><label>Respiratory Rate</label><div class="sub">breaths/min</div><input type="number" id="m-resp" placeholder="15" min="8" max="30" step="0.1"/></div>
+    </div>
+    <div class="grid2">
+      <div class="igroup"><label>Steps Yesterday</label><div class="sub">count</div><input type="number" id="m-steps" placeholder="7500" min="0"/></div>
+      <div class="igroup"><label>Active Energy</label><div class="sub">kcal</div><input type="number" id="m-cal" placeholder="420" min="0"/></div>
+    </div>
+    <div class="grid2">
+      <div class="igroup"><label>Exercise Minutes</label><div class="sub">yesterday</div><input type="number" id="m-ex" placeholder="30" min="0" max="480"/></div>
+      <div class="igroup"><label>Stand Hours</label><div class="sub">yesterday</div><input type="number" id="m-stand" placeholder="10" min="0" max="24"/></div>
+    </div>
+    <div style="margin-top:20px"><button class="btn" onclick="submitManual()">Continue with these metrics &rarr;</button></div>
+  </div>
+  <div id="err-datasource" class="err" style="display:none"></div>
+</div>
+
+<div id="s-checkin" class="screen">
+  <div class="greeting"><div class="tlabel" id="time-label">Today's check-in</div><h1 id="greeting-name">How are you, <em>really?</em></h1><p>Before anything else — just you, no numbers.</p></div>
+  <div id="checkin-qs"></div>
+  <div class="submit-area"><button class="btn" onclick="goMetrics()">Continue &rarr;</button><div id="err-checkin" class="err" style="display:none"></div></div>
+</div>
+
+<div id="s-metrics" class="screen">
+  <div class="m-intro"><h2>Your body kept a record too</h2><p>Your wearable collected data while you slept. Would you like to see it?</p></div>
+  <div class="m-choice">
+    <button class="btn-out" onclick="showMetrics()">Yes, show me</button>
+    <button class="btn-out" onclick="show('s-behaviours')">Not today &rarr;</button>
+  </div>
+  <div id="metrics-detail" style="display:none">
+    <div id="metric-cards"></div>
+    <div style="margin-top:24px;padding-bottom:16px"><button class="btn" onclick="show('s-behaviours')">Continue &rarr;</button></div>
+  </div>
+</div>
+
+<div id="s-behaviours" class="screen">
+  <div class="shead"><div class="slabel">A little more context</div><h2>What did yesterday <em>feel</em> like?</h2><p>A few gentle questions about yesterday. All optional.</p></div>
+  <div id="behaviour-qs"></div>
+  <div class="submit-area"><button class="btn" onclick="getFeedback()">Get my reflection &rarr;</button><div id="err-behaviours" class="err" style="display:none"></div></div>
+</div>
+
+<div id="s-feedback" class="screen">
+  <div id="milestone-banner" style="display:none"></div>
+  <div class="chat-header">
+    <div class="ch-label" id="ch-label">Your team session</div>
+    <div class="ch-title" id="ch-title">Your reflection</div>
+    <div id="history-note" class="history-note" style="display:none"></div>
+  </div>
+  <!-- Initial loading state before lead arrives -->
+  <div id="chat-loading" class="msg">
+    <div class="msg-avatar msg-avatar-sleep" id="chat-loading-avatar">🌙</div>
+    <div class="msg-content">
+      <div class="msg-meta">
+        <span class="msg-name msg-name-sleep" id="chat-loading-name">The Restorer</span>
+        <span class="msg-tagline" id="chat-loading-tagline">· Sleep & recovery</span>
+      </div>
+      <div class="msg-bubble msg-bubble-loading">
+        <div class="loading" style="padding:8px 0;text-align:left;">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <div class="ltext" id="ltext">Reading your session...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Chat thread — messages injected here -->
+  <div class="chat-thread" id="chat-thread"></div>
+  <!-- Summary action card — injected after all messages -->
+  <div id="summary-card" class="summary-card" style="display:none">
+    <div class="summary-top"><span class="summary-pin">📋</span><span class="summary-heading">Your next 48 hours</span></div>
+    <div class="summary-sub" id="summary-sub">From your team today</div>
+    <div id="action-items"></div>
+  </div>
+  <div class="fb-actions">
+    <button class="btn-ghost" onclick="restart()">&#8592; New check-in</button>
+    <button class="btn-ghost" onclick="showHistory()">Your journey</button>
+    <button class="btn-ghost" onclick="changeKey()">Switch user</button>
+  </div>
+</div>
+
+<footer>Stillwell prototype &middot; for demonstration purposes only</footer>
+</div>
+<script>
+var P={
+  sleep:{key:'sleep',name:'The Restorer',tagline:'Sleep & recovery',emoji:'moon',tagCls:['atag-sl-0','atag-sl-1','atag-sl-2'],ltext:'The Restorer is reading your sleep patterns...',title:'Rest is not a reward',voice:'You are The Restorer, a calm and unhurried sleep expert within the Stillwell wellness team. You speak in measured thoughtful sentences. You think in rhythms and cycles. You never alarm and never rush. You understand that sleep is the foundation everything else is built on. You reference sleep science lightly and warmly, never clinically. Your tone feels like a dimly lit room at the end of a long day.'},
+  stress:{key:'stress',name:'The Steadier',tagline:'Stress & nervous system',emoji:'leaf',tagCls:['atag-st-0','atag-st-1','atag-st-2'],ltext:'The Steadier is sensing where you are...',title:'Your nervous system is speaking',voice:'You are The Steadier, a perceptive and warm stress and recovery specialist within the Stillwell wellness team. You notice what others miss. You speak directly to the nervous system: tension, breath, the weight people carry without realising. You have a slightly philosophical edge. You see stress not as failure but as information and help people understand what their body is telling them.'},
+  nutrition:{key:'nutrition',name:'The Nourisher',tagline:'Nutrition & energy',emoji:'grain',tagCls:['atag-nu-0','atag-nu-1','atag-nu-2'],ltext:'The Nourisher is considering your patterns...',title:'Food is information for your body',voice:'You are The Nourisher, a practical and grounded nutrition expert within the Stillwell wellness team. You are honest about cause and effect without being preachy. You are curious about patterns rather than judgmental about choices. You speak about food as both fuel and pleasure. You are direct but never clinical and understand that what and when people eat profoundly affects sleep, stress, and energy.'},
+  exercise:{key:'exercise',name:'The Energiser',tagline:'Movement & strength',emoji:'bolt',tagCls:['atag-ex-0','atag-ex-1','atag-ex-2'],ltext:'The Energiser is assessing your movement...',title:'Movement is medicine',voice:'You are The Energiser, an upbeat but honest exercise and movement specialist within the Stillwell wellness team. You understand the difference between productive effort and depletion. You speak about movement as medicine and know rest is part of training. You are encouraging without being a cheerleader and help people find the right kind of movement for where they actually are today.'}
+};
+var EMO={moon:'🌙',leaf:'🌿',grain:'🌾',bolt:'⚡'};
+var DEMO={sleep:6.33,rhr:62,hrv:38,resp:16.1,steps:4200,cal:280,ex:0,stand:7,source:'demo'};
+var AVG={sleep:7.2,rhr:55,hrv:48,resp:14.8,steps:8500,cal:450,ex:35,stand:10};
+var apiKey='',userName='',health=null,sawMetrics=false,sel={},openText='',cQs=[],bQs=[],persona=null;
+var obData={why:'',vision:'',baseline:{sleep:'',stress:'',nutrition:'',exercise:''}};
+var SW_OB_KEY='stillwell_onboarding';
+
+var CQB=[
+  {pillar:'sleep',key:'energy',text:'How would you describe your energy right now?',opts:['Depleted','Low but steady','Moderate','Good','Energised']},
+  {pillar:'sleep',key:'wake',text:'How did waking up feel this morning?',opts:['Groggy and reluctant','Sluggish','Neutral','Refreshed','Ready to go']},
+  {pillar:'sleep',key:'sleepsense',text:'How did you sleep, in your own sense of it?',opts:['Poorly','Restless','Okay','Well','Deeply']},
+  {pillar:'sleep',key:'dip',text:'Are you noticing an afternoon energy dip today?',opts:['Already fading','Starting to flag','Holding steady','Feeling sharp','No dip']},
+  {pillar:'stress',key:'stress',text:'Where is your stress sitting today?',opts:['Very high','Elevated','Background hum','Low','At ease']},
+  {pillar:'stress',key:'mind',text:'How would you describe the quality of your thinking?',opts:['Scattered and racing','Unfocused','Manageable','Clear','Calm and sharp']},
+  {pillar:'stress',key:'capacity',text:'How does your capacity feel for handling today?',opts:['Running on empty','Stretched thin','Getting by','Capable','Resilient']},
+  {pillar:'stress',key:'tension',text:'Are you carrying any tension in your body right now?',opts:['Quite a lot','Some tightness','A little','Barely any','None at all']},
+  {pillar:'nutrition',key:'hunger',text:'How are you feeling around food and hunger today?',opts:['Craving everything','Hungrier than usual','Normal','Not very hungry','No appetite']},
+  {pillar:'nutrition',key:'hydration',text:'How well hydrated do you feel today?',opts:['Quite dehydrated','Could drink more','Okay','Well hydrated','Drinking plenty']},
+  {pillar:'exercise',key:'bodyready',text:'How does your body feel about moving today?',opts:['Needs rest','Heavy and reluctant','Neutral','Ready to move','Keen to exercise']},
+  {pillar:'exercise',key:'muscles',text:'How are your muscles and joints feeling?',opts:['Sore or stiff','A little tight','Normal','Loose and good','Strong and mobile']},
+  {pillar:null,key:'open',text:'Anything else on your mind?',opts:null,optional:true}
+];
+var BQB=[
+  {pillar:'stress',key:'pace',text:'How would you describe the pace of yesterday?',opts:['Relentless','Busy but managed','Steady','Gentle','Quiet']},
+  {pillar:'stress',key:'downtime',text:'Did you get any real downtime yesterday?',opts:['None at all','Very little','A short window','Some time','Plenty']},
+  {pillar:'stress',key:'social',text:'How did your social interactions feel yesterday?',opts:['Draining','Somewhat tiring','Neutral','Energising','Mostly solitude']},
+  {pillar:'stress',key:'winddown',text:'How well did you wind down before bed?',opts:['Went to bed wired','Struggled to switch off','Okay','Wound down well','Very calm']},
+  {pillar:'sleep',key:'screens',text:'Screen time in the hour before bed?',opts:['None','A little','Quite a bit','Most of the evening']},
+  {pillar:'sleep',key:'bedtime',text:'What time did you go to bed compared to usual?',opts:['Much later','A little later','About normal','A little earlier','Earlier than usual']},
+  {pillar:'sleep',key:'sleepenv',text:'How was your sleep environment last night?',opts:['Too warm or noisy','A bit unsettled','About normal','Quiet and comfortable','Ideal']},
+  {pillar:'nutrition',key:'eating',text:'How late did you eat your last meal?',opts:['Before 6pm','Around 7pm','Around 8-9pm','After 9pm']},
+  {pillar:'nutrition',key:'alcohol',text:'Did you have any alcohol yesterday?',opts:['None','One drink','A couple','More than a couple'],optional:true},
+  {pillar:'nutrition',key:'mealq',text:'How would you describe the quality of what you ate?',opts:['Grabbed what I could','Fairly poor','Mixed','Pretty good','Nourishing and balanced']},
+  {pillar:'nutrition',key:'caffeine',text:'How much caffeine, and how late?',opts:['None','Morning only','Into the afternoon','Late afternoon or evening']},
+  {pillar:'exercise',key:'movement',text:'Did you move your body or get outdoors yesterday?',opts:['No movement','A short walk','Moderate activity','Quite active','Intense exercise'],optional:true},
+  {pillar:'exercise',key:'sitting',text:'How much of yesterday did you spend sitting?',opts:['Almost all day','Most of the day','Mixed','Fairly active','Mostly on my feet']}
+];
+
+function scorePillars(){
+  var s={sleep:0,stress:0,nutrition:0,exercise:0};
+  var d=health||{},a=AVG;
+  function pdev(val,avg){return val!=null&&!isNaN(val)?(avg-val)/avg:0;}
+  function ndev(val,avg){return val!=null&&!isNaN(val)?(val-avg)/avg:0;}
+  var sd=pdev(d.sleep,a.sleep);if(sd>0.08)s.sleep+=sd*40;
+  var rd=ndev(d.rhr,a.rhr);if(rd>0.05)s.stress+=rd*30;
+  var hd=pdev(d.hrv,a.hrv);if(hd>0.05)s.stress+=hd*35;
+  var ed=pdev(d.ex,a.ex);if(ed>0.10)s.exercise+=ed*25;
+  var stepd=pdev(d.steps,a.steps);if(stepd>0.10)s.exercise+=stepd*20;
+  var neg={
+    sleep:['Depleted','Low but steady','Groggy and reluctant','Sluggish','Poorly','Restless','Already fading','Starting to flag'],
+    stress:['Very high','Elevated','Background hum','Scattered and racing','Unfocused','Running on empty','Stretched thin','Quite a lot','Some tightness'],
+    nutrition:['Quite dehydrated','Could drink more','Craving everything','Hungrier than usual','After 9pm','Around 8-9pm','More than a couple','A couple','Late afternoon or evening','Grabbed what I could','Fairly poor'],
+    exercise:['Needs rest','Heavy and reluctant','Sore or stiff','A little tight','No movement','A short walk','Almost all day','Most of the day']
+  };
+  Object.keys(sel).forEach(function(k){var v=sel[k];Object.keys(neg).forEach(function(p){if(neg[p].indexOf(v)>=0)s[p]+=12;});});
+  var winner='sleep',high=-1;
+  Object.keys(s).forEach(function(p){if(s[p]>high){high=s[p];winner=p;}});
+  return{winner:winner,scores:s};
+}
+
+function pickCQs(){
+  var req=CQB.filter(function(q){return q.key==='energy';});
+  var open=CQB.filter(function(q){return q.key==='open';});
+  var pool=CQB.filter(function(q){return q.key!=='energy'&&q.key!=='open';});
+  return req.concat(pool.sort(function(){return Math.random()-.5;}).slice(0,3)).concat(open);
+}
+function pickBQs(){
+  var picked=[];
+  ['stress','sleep','nutrition','exercise'].forEach(function(p){
+    var pool=BQB.filter(function(q){return q.pillar===p;});
+    picked.push(pool[Math.floor(Math.random()*pool.length)]);
+  });
+  var rest=BQB.filter(function(q){return picked.indexOf(q)===-1;});
+  picked.push(rest[Math.floor(Math.random()*rest.length)]);
+  return picked;
+}
+function renderQs(qs,cid,pfx){
+  var c=document.getElementById(cid);c.innerHTML='';
+  qs.forEach(function(q,i){
+    var d=document.createElement('div');d.className='card';
+    var pt=q.pillar?'<div class="ptag ptag-'+q.pillar+'">'+q.pillar+'</div>':'';
+    var ot=q.optional?'<span class="otag">Optional</span>':'';
+    var n=String(i+1).padStart(2,'0')+' / '+String(qs.length).padStart(2,'0');
+    if(q.opts){
+      d.innerHTML='<div class="qnum">'+n+'</div>'+pt+'<div class="qtext">'+q.text+' '+ot+'</div><div class="opts">'+
+        q.opts.map(function(o){return '<button class="obtn" onclick="pick(this,\''+pfx+'_'+q.key+'\')">'+o+'</button>';}).join('')+'</div>';
+    }else{
+      d.innerHTML='<div class="qnum">'+n+'</div><div class="qtext">'+q.text+' '+ot+'</div><textarea id="open-response" placeholder="Whatever feels true right now..."></textarea>';
+    }
+    c.appendChild(d);
+  });
+}
+
+function parseURL(){
+  var p=new URLSearchParams(window.location.search),d={},found=false;
+  ['sleep','rhr','hrv','resp','steps','cal','ex','stand'].forEach(function(k){
+    var v=p.get(k);
+    if(v!==null&&v!==''&&v!=='undefined'){var n=parseFloat(v);if(!isNaN(n)){d[k]=n;found=true;}}
+  });
+  if(found){d.source='shortcut';return d;}
+  return null;
+}
+
+function buildCtx(){
+  if(!health)return 'No wearable data available.';
+  var d=health,a=AVG,lines=[];
+  function fmt(val,avg,unit,label,hb){
+    if(val==null||isNaN(val))return null;
+    var diff=val-avg,pct=Math.round(Math.abs(diff)/avg*100),ctx;
+    if(pct<5)ctx='close to average';
+    else if(hb)ctx=diff>0?'above avg '+avg+unit+' (positive)':'below avg '+avg+unit;
+    else ctx=diff>0?'above avg '+avg+unit:'below avg '+avg+unit+' (positive)';
+    return label+': '+val+unit+' ('+ctx+')';
+  }
+  if(d.sleep!=null&&!isNaN(d.sleep)){
+    var h=Math.floor(d.sleep),m=Math.round((d.sleep-h)*60);
+    lines.push('Sleep: '+(m>0?h+'h '+m+'m':h+'h')+' ('+(d.sleep>=7?'within':'below')+' 7-9hr guideline)');
+  }
+  [[d.rhr,a.rhr,' bpm','Resting HR',false],[d.hrv,a.hrv,'ms','HRV',true],
+   [d.resp,a.resp,' br/m','Resp rate',false],[d.steps,a.steps,' steps','Steps',true],
+   [d.cal,a.cal,' kcal','Active energy',true],[d.ex,a.ex,' mins','Exercise',true],
+   [d.stand,a.stand,' hrs','Stand hrs',true]].forEach(function(x){var r=fmt(x[0],x[1],x[2],x[3],x[4]);if(r)lines.push(r);});
+  lines.push('Source: '+(d.source==='shortcut'?'Apple Health':'Manual or Demo'));
+  return lines.join('\n');
+}
+
+function buildCards(){
+  var c=document.getElementById('metric-cards');if(!c||!health)return;
+  var d=health,a=AVG;
+  var defs=[
+    {key:'sleep',label:'Sleep Duration',disp:function(){var h=Math.floor(d.sleep),m=Math.round((d.sleep-h)*60);return m>0?h+'h '+m+'m':h+'h';},unit:'last night',expl:'Most adults feel best with 7-9 hours. Duration matters but quality matters just as much.',ctx:function(){return d.sleep>=7?'Within the recommended range.':'Below the 7-9 hour guideline.';}},
+    {key:'rhr',label:'Resting Heart Rate',disp:function(){return d.rhr+'';},unit:'bpm',expl:'A day-to-day rise can signal stress, dehydration, or incomplete recovery.',ctx:function(){var x=d.rhr-a.rhr;if(Math.abs(x)<3)return 'Close to your average of '+a.rhr+' bpm.';return x>0?'Above your average — worth noting.':'Below average — a positive sign.';}},
+    {key:'hrv',label:'Heart Rate Variability',disp:function(){return d.hrv+'';},unit:'ms HRV',expl:'More variation is better — it means your nervous system is adaptable and recovered.',ctx:function(){var x=d.hrv-a.hrv;if(Math.abs(x)<3)return 'Close to your average of '+a.hrv+'ms.';return x<0?'Below your average — nervous system may still be processing yesterday.':'Above average — well recovered.';}},
+    {key:'resp',label:'Respiratory Rate',disp:function(){return d.resp+'';},unit:'breaths/min',expl:'A sensitive early indicator of stress. Elevated overnight rate suggests harder recovery.',ctx:function(){var x=d.resp-a.resp;if(Math.abs(x)<0.5)return 'Close to your recent average.';return x>0?'Slightly above average.':'Below average — good recovery sign.';}},
+    {key:'steps',label:'Steps Yesterday',disp:function(){return d.steps>=1000?(d.steps/1000).toFixed(1)+'k':d.steps+'';},unit:'steps',expl:'A reliable general movement indicator. Even light walking benefits sleep and mood.',ctx:function(){if(d.steps>=10000)return 'Great movement day.';if(d.steps>=7500)return 'A healthy amount of movement.';if(d.steps>=5000)return 'Moderate — a little more could help.';return 'Below average — affects sleep and next-day energy.';}},
+    {key:'cal',label:'Active Energy',disp:function(){return d.cal+'';},unit:'kcal burned',expl:'Calories burned through movement — a good proxy for how active your day was.',ctx:function(){var x=d.cal-a.cal;if(Math.abs(x)<30)return 'Close to your recent average.';return x>0?'Above average — an active day.':'Below average.';}},
+    {key:'ex',label:'Exercise Minutes',disp:function(){return d.ex+'';},unit:'mins yesterday',expl:'NHS guidelines suggest 150 mins of moderate activity per week. Short sessions count.',ctx:function(){if(d.ex===0)return 'No recorded exercise — rest is valid but movement supports all four pillars.';if(d.ex>=30)return 'A solid session.';return 'Some movement — consistency matters most.';}},
+    {key:'stand',label:'Stand Hours',disp:function(){return d.stand+'';},unit:'hours',expl:'Regular movement breaks reduce stress hormones and improve energy throughout the day.',ctx:function(){if(d.stand>=10)return 'Good posture variation throughout the day.';if(d.stand>=7)return 'Reasonable movement breaks.';return 'Fewer than ideal — extended sitting adds up.';}}
+  ];
+  c.innerHTML='';
+  defs.forEach(function(def){
+    if(d[def.key]==null||isNaN(d[def.key]))return;
+    var div=document.createElement('div');div.className='mcard';
+    div.innerHTML='<div class="mval-block"><div class="mval">'+def.disp()+'</div><div class="munit">'+def.unit+'</div></div><div class="minfo"><div class="mname">'+def.label+'</div><div class="mexpl">'+def.expl+'</div><div class="mctx">'+def.ctx()+'</div></div>';
+    c.appendChild(div);
+  });
+}
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function pick(btn,key){
+  btn.closest('.card').querySelectorAll('.obtn').forEach(function(b){b.classList.remove('sel');});
+  btn.classList.add('sel');sel[key]=btn.textContent.trim();
+}
+// ── Session Memory ──────────────────────────────────────────────
+var SW_KEY='stillwell_sessions';
+var SW_MAX=10; // keep last 10 sessions
+
+function loadSessions(){
+  try{var raw=localStorage.getItem(SW_KEY);return raw?JSON.parse(raw):[];}catch(e){return[];}
+}
+function saveSessions(sessions){
+  try{localStorage.setItem(SW_KEY,JSON.stringify(sessions));}catch(e){}
+}
+function saveSession(record){
+  var sessions=loadSessions();
+  sessions.unshift(record); // newest first
+  if(sessions.length>SW_MAX)sessions=sessions.slice(0,SW_MAX);
+  saveSessions(sessions);
+}
+
+function daysSince(isoDate){
+  if(!isoDate)return null;
+  var then=new Date(isoDate);var now=new Date();
+  var diff=now-then;return Math.floor(diff/(1000*60*60*24));
+}
+
+function formatSessionDate(isoDate){
+  var d=new Date(isoDate);
+  return d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+}
+
+function buildHistoryContext(sessions){
+  if(!sessions||sessions.length===0)return null;
+  var lines=['Previous sessions (most recent first):'];
+  sessions.forEach(function(s,i){
+    var line=formatSessionDate(s.date)+' (session '+s.num+') — Lead: '+s.leadName+' ('+s.lead+').';
+    line+=' Scores: sleep '+s.scores.sleep+', stress '+s.scores.stress+', nutrition '+s.scores.nutrition+', exercise '+s.scores.exercise+'.';
+    if(s.energy)line+=' Energy: '+s.energy+'.';
+    if(s.headline)line+=' Summary: "'+s.headline+'".';
+    if(s.actions&&s.actions.length){line+=' Actions given: '+s.actions.join('; ')+'.';}
+    lines.push(line);
+  });
+  return lines.join('\n');
+}
+
+var MILESTONES={3:'three',7:'seven',14:'fourteen',21:'twentyone'};
+var MILESTONE_COPY={
+  3:{icon:'🌱',title:'Three sessions in',sub:'Your team is starting to see patterns. From here, their perspective gets richer with every check-in.'},
+  7:{icon:'🌿',title:'A week of showing up',sub:'Seven sessions. That\'s not habit-tracking — that\'s genuine attention to how you feel. Your team has seen you across good days and harder ones.'},
+  14:{icon:'🌳',title:'Two weeks with your team',sub:'Fourteen sessions. The kind of self-awareness you\'re building here is rarer than you think. Your team knows you well enough now to spot real change.'},
+  21:{icon:'✦',title:'Twenty-one days',sub:'Research suggests three weeks is long enough for new patterns to start taking root. Whatever has shifted for you — your team has been watching it happen.'}
+};
+
+function renderWelcomeBack(){
+  var sessions=loadSessions();
+  var wb=document.getElementById('welcome-back');
+  var heading=document.getElementById('setup-heading');
+  var para=document.getElementById('setup-para');
+  if(!sessions||sessions.length===0){
+    wb.style.display='none';
+    heading.textContent='Welcome to Stillwell';
+    para.textContent='Thoughtful, personalised wellness reflections based on how you actually feel. Paste your Anthropic API key to begin.';
+    return;
+  }
+  var last=sessions[0];
+  var n=sessions.length;
+  var days=daysSince(last.date);
+  var daysText=days===0?'today':days===1?'yesterday':days+' days ago';
+  var streakNote='';
+  // simple streak: count consecutive days with sessions
+  var streak=1;
+  for(var i=1;i<sessions.length;i++){
+    var d=daysSince(sessions[i].date)-daysSince(sessions[i-1].date);
+    if(d>=0&&d<=1)streak++;else break;
+  }
+  if(streak>=3)streakNote=streak+' days in a row';
+
+  heading.textContent='Welcome back'+(last.name?', '+last.name:'')+'';
+  para.textContent='Your team is ready when you are.';
+
+  var html='<div class="welcome-back">'+
+    '<div class="wb-icon">'+( last.leadEmoji||'🌙')+'</div>'+
+    '<div class="wb-text">'+
+      '<div class="wb-title">Session '+n+' · Last check-in '+daysText+'</div>'+
+      '<div class="wb-sub">'+(last.headline||'Your '+last.leadName+' led last time.')+'</div>'+
+      (streakNote?'<div class="wb-streak">'+streakNote+' ·  keep going</div>':'')+
+    '</div>'+
+  '</div>';
+  wb.innerHTML=html;wb.style.display='block';
+  var hl=document.getElementById('setup-history-link');
+  if(hl)hl.style.display='block';
+}
+
+function renderMilestoneBanner(sessionNum){
+  var mb=document.getElementById('milestone-banner');
+  if(!mb)return;
+  var m=MILESTONE_COPY[sessionNum];
+  if(!m){mb.style.display='none';return;}
+  mb.innerHTML='<div class="milestone-banner">'+
+    '<div class="milestone-icon">'+m.icon+'</div>'+
+    '<div class="milestone-title">'+m.title+'</div>'+
+    '<div class="milestone-sub">'+m.sub+'</div>'+
+  '</div>';
+  mb.style.display='block';
+}
+// ────────────────────────────────────────────────────────────────
+
+// ── Onboarding ──────────────────────────────────────────────────
+function loadOnboarding(){
+  try{var r=localStorage.getItem(SW_OB_KEY);return r?JSON.parse(r):null;}catch(e){return null;}
+}
+function saveOnboarding(data){
+  try{localStorage.setItem(SW_OB_KEY,JSON.stringify(data));}catch(e){}
+}
+
+var obPicks={};
+var obChipSelections={why:[],vision:[]};
+
+function obChip(btn,group){
+  btn.classList.toggle('sel');
+  var label=btn.textContent.trim();
+  var arr=obChipSelections[group];
+  var idx=arr.indexOf(label);
+  if(idx>=0)arr.splice(idx,1);else arr.push(label);
+}
+
+function obPick(btn,key){
+  btn.closest('.ob-opts').querySelectorAll('.ob-opt').forEach(function(b){b.classList.remove('sel');});
+  btn.classList.add('sel');
+  obPicks[key]=btn.textContent.trim();
+}
+
+function obUpdateDots(stage){
+  [0,1,2,3].forEach(function(i){
+    var d=document.getElementById('ob-dot-'+i);
+    if(!d)return;
+    d.className='ob-dot'+(i<stage?' done':i===stage?' active':'');
+  });
+}
+
+function obNext(stage){
+  if(stage===0){
+    var whyChips=obChipSelections.why;
+    var whyText=document.getElementById('ob-why-text').value.trim();
+    var visionChips=obChipSelections.vision;
+    var visionText=document.getElementById('ob-vision-text').value.trim();
+    var err=document.getElementById('err-ob-0');
+    if(whyChips.length===0&&!whyText){
+      err.textContent='Please select at least one reason, or add a note in your own words.';
+      err.style.display='block';return;
+    }
+    err.style.display='none';
+    // Build rich text from chips + optional free text
+    obData.why=(whyChips.length>0?whyChips.join('; '):'')+(whyText?(whyChips.length>0?'. '+whyText:whyText):'');
+    obData.vision=(visionChips.length>0?visionChips.join('; '):'')+(visionText?(visionChips.length>0?'. '+visionText:visionText):'');
+    // Store chip arrays separately for display
+    obData.whyChips=whyChips;
+    obData.visionChips=visionChips;
+    obData.whyText=whyText;
+    obData.visionText=visionText;
+  } else if(stage===1){
+    var err=document.getElementById('err-ob-1');
+    var needed=['ob-sleep','ob-stress','ob-nutrition','ob-exercise'];
+    var missing=needed.filter(function(k){return !obPicks[k];});
+    if(missing.length>0){err.textContent='Please answer all four questions — even an approximate answer is fine.';err.style.display='block';return;}
+    err.style.display='none';
+    obData.baseline.sleep=obPicks['ob-sleep'];
+    obData.baseline.stress=obPicks['ob-stress'];
+    obData.baseline.nutrition=obPicks['ob-nutrition'];
+    obData.baseline.exercise=obPicks['ob-exercise'];
+  }
+  document.getElementById('ob-stage-'+stage).classList.remove('active');
+  document.getElementById('ob-stage-'+(stage+1)).classList.add('active');
+  obUpdateDots(stage+1);
+  window.scrollTo(0,0);
+  if(stage+1===3){loadWelcomeMessage();}
+}
+
+function loadWelcomeMessage(){
+  // Score baseline to pick welcome persona
+  var bScores={sleep:0,stress:0,nutrition:0,exercise:0};
+  var bMap={
+    sleep:{'Struggling — I regularly feel unrestored':4,'Variable — some okay nights, many poor ones':3,'Moderate — getting by but not thriving':2,'Generally good — occasional off nights':1,'Strong — I sleep well and wake rested':0},
+    stress:{'High — it\'s affecting my daily life':4,'Elevated — carrying more than I\'d like':3,'Background hum — manageable but present':2,'Low — mostly on top of things':1,'Calm — feeling grounded and resilient':0},
+    nutrition:{'Poor — eating is an afterthought or a problem':4,'Inconsistent — habits I know aren\'t helping':3,'Moderate — room to improve but okay':2,'Pretty good — mostly nourishing choices':1,'Strong — food works for me, not against me':0},
+    exercise:{'Depleted — moving feels like a lot':4,'Sluggish — less active than I want to be':3,'Moderate — some movement, inconsistent':2,'Active — moving regularly, feeling it':1,'Strong — training well and feeling capable':0}
+  };
+  Object.keys(bMap).forEach(function(p){
+    var val=obData.baseline[p];
+    if(bMap[p][val]!==undefined)bScores[p]=bMap[p][val];
+  });
+  var welcomePillar='sleep',high=-1;
+  Object.keys(bScores).forEach(function(p){if(bScores[p]>high){high=bScores[p];welcomePillar=p;}});
+  var wp=P[welcomePillar];
+  document.getElementById('ob-welcome-icon').textContent=EMO[wp.emoji];
+
+  var nameAddr=userName?userName:'';
+  var prompt=wp.voice+'\n\nA new user'+(nameAddr?' named '+nameAddr:'')+' has just set up their Stillwell wellness account. They have shared why they came and their starting point across four pillars. Write a short, warm welcome — two to three sentences only — in your persona voice. Speak directly to them.\n\n--- WHY THEY CAME ---\n'+obData.why+'\n\n--- THEIR VISION ---\n'+(obData.vision||'Not shared.')+'\n\n--- THEIR STARTING POINT ---\nSleep: '+obData.baseline.sleep+'\nStress: '+obData.baseline.stress+'\nNutrition: '+obData.baseline.nutrition+'\nMovement: '+obData.baseline.exercise+'\n\nAcknowledge what they have shared — not clinically, but as if you have genuinely heard them. Tell them what your team is here to help with. Leave them feeling ready. Do NOT start with "I". No preamble.'+(nameAddr?' Use '+nameAddr+'\'s name once naturally.':'');
+
+  fetch('/api/proxy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:300,messages:[{role:'user',content:prompt}]})})
+  .then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error(d&&d.error&&d.error.message||'API error');return d;});})
+  .then(function(d){
+    var text=(d.content&&d.content[0]&&d.content[0].text)||'Your team is ready when you are.';
+    document.getElementById('ob-welcome-loading').style.display='none';
+    var msgDiv=document.getElementById('ob-welcome-msg');
+    msgDiv.innerHTML='<div class="welcome-msg welcome-msg-'+welcomePillar+'">'+text+'</div>';
+    msgDiv.style.display='block';
+    // Save onboarding including welcome persona
+    obData.welcomePersona=welcomePillar;
+    obData.welcomeMessage=text;
+    obData.date=new Date().toISOString();
+    obData.name=userName||null;
+    saveOnboarding(obData);
+    document.getElementById('ob-welcome-actions').style.display='block';
+  })
+  .catch(function(e){
+    document.getElementById('ob-welcome-loading').style.display='none';
+    var msgDiv=document.getElementById('ob-welcome-msg');
+    msgDiv.innerHTML='<div class="err">Could not load your welcome message: '+e.message+'</div>';
+    msgDiv.style.display='block';
+    // Still save and allow continuation
+    obData.date=new Date().toISOString();obData.name=userName||null;
+    saveOnboarding(obData);
+    document.getElementById('ob-welcome-actions').style.display='block';
+  });
+}
+
+function finishOnboarding(){
+  show('s-datasource');
+}
+
+// ── History ─────────────────────────────────────────────────────
+function showHistory(){
+  var ob=loadOnboarding();
+  var sessions=loadSessions();
+
+  // Origin card
+  var originEl=document.getElementById('hist-origin');
+  if(ob&&ob.why){
+    // Show chips as tags if available, otherwise show plain text
+    function chipsOrText(chips,text){
+      if(chips&&chips.length>0){
+        var tags=chips.map(function(c){return '<span style="display:inline-block;padding:3px 10px;background:var(--cream);border:1px solid var(--stone);border-radius:12px;font-size:.76rem;margin:3px 3px 3px 0;color:var(--earth);">'+c+'</span>';}).join('');
+        return tags+(text?'<div style="font-size:.84rem;color:var(--text);margin-top:8px;font-style:italic;">'+text+'</div>':'');
+      }
+      return '<div style="font-size:.84rem;color:var(--text);font-style:italic;">'+text+'</div>';
+    }
+    var blHtml=Object.keys(ob.baseline).map(function(p){
+      return '<div class="hist-bl-item"><div class="hist-bl-pillar">'+p+'</div><div class="hist-bl-val">'+ob.baseline[p]+'</div></div>';
+    }).join('');
+    originEl.innerHTML=
+      '<div class="hist-origin">'+
+        '<div class="hist-origin-label">Why you started</div>'+
+        '<div style="margin-bottom:12px;">'+chipsOrText(ob.whyChips,ob.whyText||'')+'</div>'+
+        (ob.vision||ob.visionChips&&ob.visionChips.length?
+          '<div class="hist-origin-label">What better looks like</div>'+
+          '<div style="margin-bottom:12px;">'+chipsOrText(ob.visionChips,ob.visionText||'')+'</div>':'')+
+        '<div class="hist-origin-label" style="margin-top:6px;">Your starting point</div>'+
+        '<div class="hist-origin-baseline">'+blHtml+'</div>'+
+      '</div>';
+    originEl.style.display='block';
+  } else {
+    originEl.style.display='none';
+  }
+
+  // Pattern note
+  var patternEl=document.getElementById('hist-pattern');
+  if(sessions.length>=3){
+    var counts={sleep:0,stress:0,nutrition:0,exercise:0};
+    sessions.forEach(function(s){if(s.lead&&counts[s.lead]!==undefined)counts[s.lead]++;});
+    var topPillar=Object.keys(counts).reduce(function(a,b){return counts[a]>=counts[b]?a:b;});
+    var topCount=counts[topPillar];
+    if(topCount>1){
+      patternEl.textContent=P[topPillar].name+' has led '+topCount+' of your '+sessions.length+' sessions.';
+      patternEl.style.display='block';
+    } else {patternEl.style.display='none';}
+  } else {patternEl.style.display='none';}
+
+  // Session list
+  var listEl=document.getElementById('hist-list');
+  var subEl=document.getElementById('hist-subhead');
+  if(sessions.length===0){
+    subEl.textContent='Complete your first check-in to start building your record.';
+    listEl.innerHTML='<div class="hist-no-sessions">No sessions yet.</div>';
+  } else {
+    subEl.textContent=sessions.length+' session'+(sessions.length===1?'':'s')+' completed.';
+    listEl.innerHTML='';
+    sessions.forEach(function(s,i){
+      var sp=P[s.lead]||P.sleep;
+      var d=document.createElement('div');d.className='hist-session';
+      var actHtml=s.actions&&s.actions.length
+        ? '<div class="hist-actions-title">Actions given</div>'+
+          s.actions.map(function(a){return '<div class="aitem" style="margin-bottom:8px;"><div class="atag '+sp.tagCls[0]+'" style="min-width:auto;padding:2px 8px;">&#8250;</div><div class="atext">'+a+'</div></div>';}).join('')
+        : '';
+      d.innerHTML=
+        '<div class="hist-session-top" onclick="histToggle('+i+')">'+
+          '<div class="hist-session-avatar hist-session-avatar-'+s.lead+'">'+EMO[sp.emoji]+'</div>'+
+          '<div class="hist-session-meta">'+
+            '<div class="hist-session-top-line">'+
+              '<span class="hist-session-num">Session '+s.num+'</span>'+
+              '<span class="hist-session-date">'+formatSessionDate(s.date)+'</span>'+
+            '</div>'+
+            '<div class="hist-session-headline">'+(s.headline||sp.name+' led this session.')+'</div>'+
+          '</div>'+
+          '<div class="hist-session-chevron" id="hist-chev-'+i+'">&#8964;</div>'+
+        '</div>'+
+        '<div class="hist-session-detail" id="hist-detail-'+i+'">'+
+          '<div class="hist-session-headline-full">'+(s.headline||'')+'</div>'+
+          actHtml+
+        '</div>';
+      listEl.appendChild(d);
+    });
+  }
+  show('s-history');
+}
+
+function histToggle(i){
+  var det=document.getElementById('hist-detail-'+i);
+  var chev=document.getElementById('hist-chev-'+i);
+  if(!det)return;
+  var isOpen=det.classList.toggle('open');
+  if(chev)chev.classList.toggle('open',isOpen);
+}
+// ────────────────────────────────────────────────────────────────
+
+function startApp(){
+  var err=document.getElementById('err-setup');
+  err.style.display='none';
+  userName=document.getElementById('user-name').value.trim();
+  cQs=pickCQs();bQs=pickBQs();
+  renderQs(cQs,'checkin-qs','c');renderQs(bQs,'behaviour-qs','b');
+  var hr=new Date().getHours();
+  var timeLabel=hr<12?'Morning check-in':hr<17?'Afternoon check-in':'Evening check-in';
+  document.getElementById('time-label').textContent=timeLabel;
+  var greet=document.getElementById('greeting-name');
+  if(greet){greet.innerHTML=userName?'How are you, <em>'+userName+'?</em>':'How are you, <em>really?</em>';}
+  var ud=parseURL();
+  if(ud){health=ud;document.getElementById('detected-banner').style.display='block';document.getElementById('source-options').style.display='none';}
+  document.getElementById('shortcut-url').textContent=window.location.href.split('?')[0]+'?sleep=SLEEP&rhr=RHR&hrv=HRV&resp=RESP&steps=STEPS&cal=CALS&ex=EXMINS&stand=STANDHRS';
+  // Route to onboarding if first time
+  var ob=loadOnboarding();
+  if(!ob){
+    show('s-onboarding');
+  } else {
+    show('s-datasource');
+  }
+}
+function chooseSource(type){
+  document.querySelectorAll('.sbtn').forEach(function(b){b.classList.remove('sel');});
+  document.getElementById('btn-'+type).classList.add('sel');
+  document.getElementById('panel-shortcut').style.display='none';
+  document.getElementById('panel-manual').style.display='none';
+  if(type==='demo'){health=Object.assign({},DEMO);show('s-checkin');}
+  else if(type==='manual'){document.getElementById('panel-manual').style.display='block';document.getElementById('panel-manual').scrollIntoView({behavior:'smooth'});}
+  else{document.getElementById('panel-shortcut').style.display='block';document.getElementById('panel-shortcut').scrollIntoView({behavior:'smooth'});}
+}
+function submitManual(){
+  function g(id){var v=document.getElementById(id).value;return v!==''?parseFloat(v):null;}
+  health={sleep:g('m-sleep'),rhr:g('m-rhr'),hrv:g('m-hrv'),resp:g('m-resp'),steps:g('m-steps'),cal:g('m-cal'),ex:g('m-ex'),stand:g('m-stand'),source:'manual'};
+  var has=Object.keys(health).some(function(k){return k!=='source'&&health[k]!==null;});
+  if(!has){var e=document.getElementById('err-datasource');e.textContent='Please enter at least one metric.';e.style.display='block';return;}
+  show('s-checkin');
+}
+function goMetrics(){
+  var err=document.getElementById('err-checkin');
+  if(!sel['c_energy']){err.textContent='Please answer at least the first question.';err.style.display='block';return;}
+  err.style.display='none';
+  var el=document.getElementById('open-response');openText=el?el.value.trim():'';
+  show('s-metrics');
+}
+function showMetrics(){
+  sawMetrics=true;buildCards();
+  document.getElementById('metrics-detail').style.display='block';
+  document.querySelector('.m-choice').style.display='none';
+  window.scrollTo(0,0);
+}
+
+async function getFeedback(){
+  var sc=scorePillars();persona=P[sc.winner];
+
+  // Load history and compute session number
+  var pastSessions=loadSessions();
+  var sessionNum=pastSessions.length+1;
+  var historyCtx=buildHistoryContext(pastSessions.slice(0,5));
+  var hasHistory=pastSessions.length>0;
+
+  // Build onboarding context block
+  var ob=loadOnboarding();
+  var onboardingCtx='';
+  if(ob&&ob.why){
+    onboardingCtx='\n\n--- WHY THEY CAME TO STILLWELL ---\n'+ob.why+(ob.vision?'\nTheir vision of feeling better: '+ob.vision:'')+'\n\n--- THEIR STARTING BASELINE ---\nSleep: '+ob.baseline.sleep+'\nStress: '+ob.baseline.stress+'\nNutrition: '+ob.baseline.nutrition+'\nMovement: '+ob.baseline.exercise+'\n\nWhen relevant, use this to acknowledge progress or remind them of what they came here for. Do not repeat it mechanically — only surface it when it genuinely adds meaning to what you are saying.';
+  }
+
+  // Setup header
+  document.getElementById('chat-loading-avatar').className='msg-avatar msg-avatar-'+sc.winner;
+  document.getElementById('chat-loading-avatar').textContent=EMO[persona.emoji];
+  document.getElementById('chat-loading-name').className='msg-name msg-name-'+sc.winner;
+  document.getElementById('chat-loading-name').textContent=persona.name;
+  document.getElementById('chat-loading-tagline').textContent=persona.tagline;
+  document.getElementById('ltext').textContent=persona.ltext;
+  var dayLabel=new Date().toLocaleDateString('en-GB',{weekday:'long'});
+  document.getElementById('ch-label').innerHTML='Your team · '+dayLabel+'<span class="session-count">Session '+sessionNum+'</span>';
+  document.getElementById('ch-title').textContent=persona.title;
+  document.getElementById('chat-thread').innerHTML='';
+  document.getElementById('summary-card').style.display='none';
+  document.getElementById('action-items').innerHTML='';
+
+  // History note beneath header
+  var hn=document.getElementById('history-note');
+  if(hasHistory&&hn){
+    var last=pastSessions[0];
+    var days=daysSince(last.date);
+    var daysText=days===0?'earlier today':days===1?'yesterday':days+' days ago';
+    hn.textContent='Your team last saw you '+daysText+'. They remember.';
+    hn.style.display='block';
+  }else if(hn){hn.style.display='none';}
+
+  // Milestone banner
+  renderMilestoneBanner(sessionNum);
+
+  show('s-feedback');
+
+  var cCtx=cQs.filter(function(q){return q.key!=='open'&&sel['c_'+q.key];}).map(function(q){return '['+(q.pillar?q.pillar.toUpperCase():'GENERAL')+'] '+q.text+': '+sel['c_'+q.key];}).join('\n');
+  var bCtx=bQs.filter(function(q){return sel['b_'+q.key];}).map(function(q){return '['+q.pillar.toUpperCase()+'] '+q.text+': '+sel['b_'+q.key];}).join('\n');
+  var ss='Scores: Sleep '+Math.round(sc.scores.sleep)+' Stress '+Math.round(sc.scores.stress)+' Nutrition '+Math.round(sc.scores.nutrition)+' Exercise '+Math.round(sc.scores.exercise)+'. Active: '+sc.winner.toUpperCase();
+  var dataCtx=buildCtx();
+  var metricsNote=sawMetrics?'User viewed metrics.':'User did not view metrics - do not reference specific numbers.';
+  var sessionSummary='Check-in:\n'+(cCtx||'Minimal.')+'\nBehaviours:\n'+(bCtx||'Skipped.')+'\n'+ss;
+  var nameAddr=userName?userName:'';
+  var nameRef=userName?userName:'you';
+
+  var scoresCopy=Object.assign({},sc.scores);
+  delete scoresCopy[sc.winner];
+  var closingPillar=Object.keys(scoresCopy).reduce(function(a,b){return scoresCopy[a]>=scoresCopy[b]?a:b;});
+
+  function callAPI(prompt){
+    return fetch('/api/proxy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1000,messages:[{role:'user',content:prompt}]})})
+    .then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error(d&&d.error&&d.error.message||'Request failed ('+r.status+')');return d;});});
+  }
+
+  var namingRule='Address the user directly as "you" throughout — every sentence speaks to them, not about them. '+(nameAddr?'Use their name ('+nameAddr+') once only, at or near the start of your message. After that, use "you" only.':'Do not use a name.');
+
+  var historyBlock=(historyCtx?'\n\n--- SESSION HISTORY (use this to identify trends, improvements, and persistent patterns) ---\n'+historyCtx+'\n\nIMPORTANT: If you can see meaningful change — improvement OR deterioration — name it directly. If a pattern has repeated across sessions, acknowledge it has persisted. If today is the first session, treat it as a baseline.':'')+onboardingCtx;
+
+  // Lead prompt — includes history, requests headline for storage
+  var leadPrompt=persona.voice+'\n\nYou are speaking directly to '+(nameAddr||'a user')+' as part of their Stillwell wellness session (session '+sessionNum+').\n\n--- HOW THEY FEEL TODAY ---\n'+(cCtx||'Minimal responses.')+'\n'+(openText?'In their own words: "'+openText+'"':'')+'\n\n--- WEARABLE DATA ---\n'+dataCtx+'\n'+metricsNote+'\n\n--- YESTERDAY BEHAVIOURS ---\n'+(bCtx||'Skipped.')+'\n\n--- PILLAR ANALYSIS ---\n'+ss+historyBlock+'\n\n--- YOUR TASK ---\nWrite a THREE-PART response.\n\n'+namingRule+'\n\nPART 1 — OUTPUT LABEL: ---HEADLINE---\nOne sentence only (max 12 words). A plain summary of today\'s session from your perspective — e.g. "Sleep improving but stress patterns persisting into week two." This will be stored and shown to the user next time as a reminder of this session. No names.\n\nPART 2 — OUTPUT LABEL: ---SUMMARY---\nOne sentence only. A warm, direct observation about what stands out most to you from their session today. This is what the user sees first, before choosing to read more.'+(hasHistory?' If there is meaningful change or progress since last session, lead with that.':'')+'\n\nPART 3 — OUTPUT LABEL: ---FULL---\nThree short paragraphs, max 160 words total.\nParagraph 1: Acknowledge how they feel today — one sentence, warm and specific.'+(hasHistory?' If relevant, reference what has changed since you last saw them — improvement or deterioration.':'')+'\nParagraph 2: Two to three sentences. Name the clearest pattern connecting their behaviours to their body\'s response. Speak to them directly.\nParagraph 3: Two sentences. First — what they will likely keep experiencing if this continues. Second — what they can expect within 24-48 hours if they act now. Make it worth looking forward to.\n\nThen output this label on its own line: ---ACTIONS---\nThen write exactly TWO actions:\nTONIGHT: [specific action and why it helps]\nTOMORROW: [specific action and its likely benefit]\n\nRules: Stay in character. Warm and direct, not clinical. No bullet points inside paragraphs.';
+
+  function supportPrompt(sp,isClosing){
+    var roleNote=isClosing
+      ? 'You are the final voice. Add something that helps the user feel clear and ready to act — your own angle that leaves them with momentum. Two to three sentences.'
+      : 'Add your perspective in two to three sentences — specific, grounded, directed at the user.';
+    return sp.voice+'\n\nYou are speaking directly to '+(nameAddr||'a user')+' as part of their Stillwell wellness session (session '+sessionNum+'). '+roleNote+'\n\n'+namingRule+historyBlock+'\n\n--- SESSION DATA ---\n'+sessionSummary+'\n\n--- WEARABLE DATA ---\n'+dataCtx+'\n'+metricsNote+'\n\n--- YOUR TASK ---\nWrite a TWO-PART response.\n\nPART 1 — OUTPUT LABEL: ---SUMMARY---\nOne sentence. Your sharpest, most direct observation for this user from your '+sp.key+' expertise.'+(hasHistory?' If there is meaningful change — improvement or decline — in your area since previous sessions, lead with that.':'')+' Speak to them, not about them.\n\nPART 2 — OUTPUT LABEL: ---FULL---\nTwo to three sentences in your persona voice. Bring something concrete from the session. Offer your unique '+sp.key+' angle — something the '+sc.winner+' lead would not naturally cover. Every sentence addressed to "you".\n\nRules: Do NOT start with "I". No references to other team members. No preamble. No sign-off.';
+  }
+
+  function secondActionPrompt(sp2){
+    return sp2.voice+'\n\nWrite a single "also try this" suggestion for '+(nameAddr||'the user')+' for the coming week, from your '+sp2.key+' expertise. Session '+sessionNum+'.\n\n--- SESSION DATA ---\n'+sessionSummary+historyBlock+'\n\n--- WEARABLE DATA ---\n'+dataCtx+'\n'+metricsNote+'\n\nOne or two sentences: the action and why it helps. Concrete and specific. Speak directly to "you".\n\nOutput label: ALSO TRY:\nThen your suggestion.';
+  }
+
+  function makeLoadingBubble(pkey,loadText){
+    var sp=P[pkey];
+    var msg=document.createElement('div');msg.className='msg';
+    msg.innerHTML=
+      '<div class="msg-avatar msg-avatar-'+pkey+'">'+EMO[sp.emoji]+'</div>'+
+      '<div class="msg-content">'+
+        '<div class="msg-meta">'+
+          '<span class="msg-name msg-name-'+pkey+'">'+sp.name+'</span>'+
+          '<span class="msg-tagline">· '+sp.tagline+'</span>'+
+        '</div>'+
+        '<div class="msg-bubble msg-bubble-'+pkey+' msg-bubble-loading" id="mbubble-'+pkey+'">'+
+          '<div class="loading" style="padding:6px 0 4px;text-align:left;">'+
+            '<div class="dots"><span></span><span></span><span></span></div>'+
+            '<div class="ltext">'+loadText+'</div>'+
+          '</div>'+
+        '</div>'+
+      '</div>';
+    return msg;
+  }
+
+  function renderBubble(pkey,summaryText,fullText,actionHtml){
+    var bubble=document.getElementById('mbubble-'+pkey);
+    if(!bubble)return;
+    var detailId='detail-'+pkey;var arrowId='arrow-'+pkey;
+    var fullHtml=fullText.split(/\n\n+/).filter(function(p){return p.trim();}).map(function(p){return '<p>'+p.trim()+'</p>';}).join('');
+    bubble.classList.remove('msg-bubble-loading');
+    bubble.innerHTML=
+      '<div class="bubble-summary">'+summaryText+'</div>'+
+      '<div class="bubble-hint bubble-hint-'+pkey+'">'+
+        '<span>Read full assessment</span>'+
+        '<span class="bubble-hint-arrow" id="'+arrowId+'">&#8964;</span>'+
+      '</div>';
+    var detail=document.createElement('div');
+    detail.id=detailId;detail.className='bubble-detail bubble-detail-'+pkey;
+    detail.innerHTML=fullHtml+(actionHtml?'<div class="detail-action detail-action-'+pkey+'">'+actionHtml+'</div>':'');
+    bubble.parentNode.appendChild(detail);
+    bubble.onclick=function(){
+      var isOpen=detail.classList.toggle('open');
+      document.getElementById(arrowId).classList.toggle('open',isOpen);
+    };
+  }
+
+  try{
+    // Stagger calls to avoid concurrency limits
+    function delay(ms){return new Promise(function(r){setTimeout(r,ms);});}
+    function callAPIWithRetry(prompt,retries){
+      retries=retries||2;
+      return callAPI(prompt).catch(function(e){
+        if(retries>0)return delay(1500).then(function(){return callAPIWithRetry(prompt,retries-1);});
+        throw e;
+      });
+    }
+    var supportOrder=['sleep','stress','nutrition','exercise'].filter(function(p){return p!==sc.winner;});
+    var ci=supportOrder.indexOf(closingPillar);
+    if(ci>-1&&ci!==supportOrder.length-1){supportOrder.splice(ci,1);supportOrder.push(closingPillar);}
+    var leadProm=callAPI(leadPrompt);
+    await delay(600);
+    var secondActionProm=callAPI(secondActionPrompt(P[closingPillar]));
+    await delay(600);
+    var supportProms=[];
+    for(var si=0;si<supportOrder.length;si++){
+      supportProms.push(callAPIWithRetry(supportPrompt(P[supportOrder[si]],supportOrder[si]===closingPillar)));
+      if(si<supportOrder.length-1)await delay(600);
+    }
+
+    var thread=document.getElementById('chat-thread');
+    supportOrder.forEach(function(pkey){
+      var isClosing=pkey===closingPillar;
+      thread.appendChild(makeLoadingBubble(pkey,isClosing?P[pkey].name+' is closing the session…':'Weighing in…'));
+    });
+
+    function parseParts(raw){
+      var hl='',sum='',full='',act='';
+      var h=raw.indexOf('---HEADLINE---');var s=raw.indexOf('---SUMMARY---');var f=raw.indexOf('---FULL---');var a=raw.indexOf('---ACTIONS---');
+      if(h>=0){var end=s>=0?s:(f>=0?f:(a>=0?a:raw.length));hl=raw.substring(h+14,end).trim();}
+      if(s>=0){var end=f>=0?f:(a>=0?a:raw.length);sum=raw.substring(s+13,end).trim();}
+      if(f>=0){var end=a>=0?a:raw.length;full=raw.substring(f+10,end).trim();}
+      if(a>=0){act=raw.substring(a+13).trim();}
+      if(!sum&&!full){full=raw.trim();}
+      return{hl:hl,sum:sum,full:full,act:act};
+    }
+
+    var leadData=await leadProm;
+    if(!leadData.content||!leadData.content[0]||!leadData.content[0].text)throw new Error('Unexpected response. Check API credits.');
+    var lp=parseParts(leadData.content[0].text);
+
+    var leadTags=[{key:'TONIGHT',label:'Tonight',i:0},{key:'TOMORROW',label:'Tomorrow',i:1}];
+    var leadActionItems=[];
+    if(lp.act){
+      lp.act.split('\n').filter(function(l){return l.trim();}).forEach(function(line){
+        leadTags.forEach(function(t){
+          if(line.toUpperCase().indexOf(t.key+':')===0){
+            leadActionItems.push({label:t.label,cls:persona.tagCls[t.i],text:line.substring(t.key.length+1).trim()});
+          }
+        });
+      });
+    }
+    var leadActionHtml=leadActionItems.map(function(a){
+      return '<div class="aitem"><div class="atag '+a.cls+'">'+a.label+'</div><div class="atext">'+a.text+'</div></div>';
+    }).join('');
+
+    document.getElementById('chat-loading').style.display='none';
+    var leadMsg=document.createElement('div');leadMsg.className='msg';
+    leadMsg.innerHTML=
+      '<div class="msg-avatar msg-avatar-'+sc.winner+'">'+EMO[persona.emoji]+'</div>'+
+      '<div class="msg-content">'+
+        '<div class="msg-meta">'+
+          '<span class="msg-name msg-name-'+sc.winner+'">'+persona.name+'</span>'+
+          '<span class="msg-tagline">· '+persona.tagline+'</span>'+
+        '</div>'+
+        '<div class="msg-bubble msg-bubble-'+sc.winner+' msg-bubble-loading" id="mbubble-'+sc.winner+'">'+
+          '<div class="loading" style="padding:6px 0 4px;text-align:left;">'+
+            '<div class="dots"><span></span><span></span><span></span></div>'+
+          '</div>'+
+        '</div>'+
+      '</div>';
+    thread.insertBefore(leadMsg,thread.firstChild);
+    await new Promise(function(r){setTimeout(r,50);});
+    renderBubble(sc.winner,lp.sum||lp.full,lp.full,leadActionHtml);
+
+    var secondActionData=await secondActionProm;
+    var alsoTryContent='';
+    var sat=(secondActionData.content&&secondActionData.content[0]&&secondActionData.content[0].text)||'';
+    var satLines=sat.split('\n').filter(function(l){return l.trim();});
+    var foundAt=false;
+    satLines.forEach(function(l){
+      if(l.toUpperCase().indexOf('ALSO TRY:')===0){foundAt=true;var r=l.substring(9).trim();if(r)alsoTryContent=r;}
+      else if(foundAt&&!alsoTryContent){alsoTryContent=l.trim();}
+      else if(foundAt&&alsoTryContent){alsoTryContent+=' '+l.trim();}
+    });
+    if(!alsoTryContent)alsoTryContent=sat.trim();
+
+    var sp2=P[closingPillar];
+    await Promise.all(supportOrder.map(function(pkey,i){
+      return supportProms[i]
+        .then(function(d){
+          var raw=(d.content&&d.content[0]&&d.content[0].text)||'';
+          var pp=parseParts(raw);
+          var actionHtml='';
+          if(pkey===closingPillar&&alsoTryContent){
+            actionHtml='<div class="aitem"><div class="atag '+sp2.tagCls[2]+'" style="white-space:nowrap;">'+EMO[sp2.emoji]+' Also try</div><div class="atext">'+alsoTryContent+'</div></div>';
+          }
+          renderBubble(pkey,pp.sum||pp.full,pp.full,actionHtml);
+        })
+        .catch(function(){
+          var bubble=document.getElementById('mbubble-'+pkey);
+          if(bubble){bubble.innerHTML='<span style="font-size:.82rem;font-style:italic;opacity:.7;">This perspective couldn\'t load — try a new check-in if this persists.</span>';bubble.classList.remove('msg-bubble-loading');}
+        });
+    }));
+
+    document.getElementById('summary-sub').textContent=persona.name+' · '+sp2.name;
+    var items=document.getElementById('action-items');items.innerHTML='';
+    leadActionItems.forEach(function(a){
+      var d=document.createElement('div');d.className='aitem';
+      d.innerHTML='<div class="atag '+a.cls+'">'+a.label+'</div><div class="atext">'+a.text+'</div>';
+      items.appendChild(d);
+    });
+    if(alsoTryContent){
+      var d=document.createElement('div');d.className='aitem';
+      d.innerHTML='<div class="atag '+sp2.tagCls[2]+'" style="white-space:nowrap;">'+EMO[sp2.emoji]+' Also try</div><div class="atext">'+alsoTryContent+'</div>';
+      items.appendChild(d);
+    }
+    document.getElementById('summary-card').style.display='block';
+
+    // Save session record
+    var sessionRecord={
+      num:sessionNum,
+      date:new Date().toISOString(),
+      name:userName||null,
+      lead:sc.winner,
+      leadName:persona.name,
+      leadEmoji:EMO[persona.emoji],
+      scores:{
+        sleep:Math.round(sc.scores.sleep),
+        stress:Math.round(sc.scores.stress),
+        nutrition:Math.round(sc.scores.nutrition),
+        exercise:Math.round(sc.scores.exercise)
+      },
+      energy:sel['c_energy']||null,
+      headline:lp.hl||lp.sum||null,
+      actions:leadActionItems.map(function(a){return a.label+': '+a.text;})
+    };
+    saveSession(sessionRecord);
+
+  }catch(e){
+    document.getElementById('chat-loading').style.display='none';
+    var errMsg=document.createElement('div');
+    errMsg.innerHTML='<div class="err">'+e.message+'</div>';
+    document.getElementById('chat-thread').prepend(errMsg);
+  }
+}
+
+function restart(){
+  sel={};openText='';sawMetrics=false;health=null;persona=null;
+  cQs=pickCQs();bQs=pickBQs();
+  renderQs(cQs,'checkin-qs','c');renderQs(bQs,'behaviour-qs','b');
+  document.getElementById('metrics-detail').style.display='none';
+  document.querySelector('.m-choice').style.display='flex';
+  document.querySelectorAll('.sbtn').forEach(function(b){b.classList.remove('sel');});
+  document.getElementById('panel-shortcut').style.display='none';
+  document.getElementById('panel-manual').style.display='none';
+  document.getElementById('detected-banner').style.display='none';
+  document.getElementById('source-options').style.display='flex';
+  document.getElementById('metric-cards').innerHTML='';
+  document.getElementById('chat-thread').innerHTML='';
+  document.getElementById('summary-card').style.display='none';
+  document.getElementById('chat-loading').style.display='flex';
+  var mb=document.getElementById('milestone-banner');if(mb)mb.style.display='none';
+  var hn=document.getElementById('history-note');if(hn)hn.style.display='none';
+  show('s-datasource');
+}
+function changeKey(){userName='';document.getElementById('user-name').value='';restart();show('s-setup');}
+window.addEventListener('load',function(){renderWelcomeBack();});
+</script>
+</body>
+</html>
