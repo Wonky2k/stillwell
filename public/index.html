@@ -283,6 +283,26 @@ footer{text-align:center;padding:16px 0 40px;font-size:.72rem;color:var(--stone)
 .hist-session-headline-full{font-size:.84rem;color:var(--text);line-height:1.6;margin-bottom:12px;padding-top:14px;font-style:italic;}
 .hist-actions-title{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:8px;}
 .hist-no-sessions{text-align:center;padding:40px 0;color:var(--tl);font-size:.88rem;font-style:italic;}
+/* ── Wellness slider ── */
+.slider-screen{text-align:center;padding:8px 0 24px;}
+.slider-screen h2{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;color:var(--earth);margin-bottom:10px;}
+.slider-screen p{font-size:.88rem;color:var(--tl);line-height:1.7;margin-bottom:32px;}
+.slider-wrap{padding:0 8px 32px;}
+.slider-anchors{display:flex;justify-content:space-between;font-size:.75rem;color:var(--tl);margin-bottom:10px;font-style:italic;}
+.slider-mid-anchors{display:flex;justify-content:center;font-size:.72rem;color:var(--tl);margin-bottom:14px;font-style:italic;opacity:.7;}
+input[type=range].wellness-slider{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;background:linear-gradient(to right,var(--sl-b),var(--st-b),var(--moss));outline:none;cursor:pointer;}
+input[type=range].wellness-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;background:var(--earth);cursor:pointer;border:3px solid var(--white);box-shadow:0 2px 8px rgba(74,55,40,.25);}
+input[type=range].wellness-slider::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:var(--earth);cursor:pointer;border:3px solid var(--white);box-shadow:0 2px 8px rgba(74,55,40,.25);}
+.slider-feel{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:300;color:var(--earth);min-height:2rem;margin-bottom:8px;transition:opacity .2s;}
+/* ── Progress chart ── */
+.hist-chart-wrap{background:var(--white);border:1px solid var(--stone);border-radius:14px;padding:22px 24px;margin-bottom:20px;}
+.hist-chart-title{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--tl);margin-bottom:4px;}
+.hist-chart-sub{font-size:.76rem;color:var(--tl);font-style:italic;margin-bottom:16px;}
+.hist-chart-svg{width:100%;overflow:visible;}
+.hist-chart-baseline{stroke:var(--stone);stroke-dasharray:4 3;}
+.hist-chart-line{fill:none;stroke:var(--moss);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+.hist-chart-area{fill:url(#chartGrad);opacity:.3;}
+.hist-chart-dot{fill:var(--moss);}
 @keyframes pulse{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
 </style>
 </head>
@@ -296,13 +316,33 @@ footer{text-align:center;padding:16px 0 40px;font-size:.72rem;color:var(--stone)
     <h2 id="setup-heading">Welcome to Stillwell</h2>
     <p id="setup-para">Thoughtful, personalised wellness reflections based on how you actually feel. Enter your first name to begin.</p>
     <div class="igroup"><label>First name</label><input type="text" id="user-name" placeholder="e.g. Sarah" autocomplete="given-name"/><p class="note">So your team can speak to you directly.</p></div>
-    
     <button class="btn" onclick="startApp()">Continue &rarr;</button>
     <div id="err-setup" class="err" style="display:none"></div>
     <div id="setup-history-link" style="display:none;text-align:center;margin-top:16px;">
       <button class="btn-ghost" onclick="showHistory()" style="font-size:.8rem;">View your journey &rarr;</button>
     </div>
+    <div id="switch-user-link" style="display:none;text-align:center;margin-top:10px;">
+      <button class="btn-ghost" onclick="switchUser()" style="font-size:.8rem;color:var(--tl);">Not you? Switch user</button>
+    </div>
   </div>
+</div>
+
+<!-- ── Wellness slider ── -->
+<div id="s-slider" class="screen">
+  <div class="slider-screen">
+    <div class="ob-icon" style="font-size:1.8rem;margin-bottom:16px;">🌡</div>
+    <h2>Before we begin</h2>
+    <p>Taking everything into account — how are you feeling in yourself right now?</p>
+  </div>
+  <div class="slider-wrap">
+    <div class="slider-anchors">
+      <span>Struggling</span>
+      <span>Thriving</span>
+    </div>
+    <input type="range" class="wellness-slider" id="wellness-slider" min="1" max="10" value="5" oninput="sliderMove(this.value)"/>
+    <div class="slider-feel" id="slider-feel">Getting by</div>
+  </div>
+  <button class="btn" style="max-width:400px;margin:0 auto;display:block;" onclick="submitSlider()">Continue &rarr;</button>
 </div>
 
 <!-- ── Onboarding ── -->
@@ -479,6 +519,7 @@ footer{text-align:center;padding:16px 0 40px;font-size:.72rem;color:var(--stone)
     <p id="hist-subhead">A record of where you've been.</p>
   </div>
   <div id="hist-origin" style="display:none"></div>
+  <div id="hist-chart" style="display:none"></div>
   <div id="hist-pattern" class="hist-pattern" style="display:none"></div>
   <div id="hist-list"></div>
   <div style="text-align:center;padding:16px 0 48px;">
@@ -793,6 +834,7 @@ function buildHistoryContext(sessions){
   sessions.forEach(function(s,i){
     var line=formatSessionDate(s.date)+' (session '+s.num+') — Lead: '+s.leadName+' ('+s.lead+').';
     line+=' Scores: sleep '+s.scores.sleep+', stress '+s.scores.stress+', nutrition '+s.scores.nutrition+', exercise '+s.scores.exercise+'.';
+    if(s.wellnessScore)line+=' Self-reported wellness: '+s.wellnessScore+'/10 ('+( s.wellnessScore<=3?'struggling':s.wellnessScore<=5?'getting by':s.wellnessScore<=7?'holding steady':'feeling good')+').';
     if(s.energy)line+=' Energy: '+s.energy+'.';
     if(s.headline)line+=' Summary: "'+s.headline+'".';
     if(s.actions&&s.actions.length){line+=' Actions given: '+s.actions.join('; ')+'.';}
@@ -825,11 +867,18 @@ function renderWelcomeBack(){
   var days=daysSince(last.date);
   var daysText=days===0?'today':days===1?'yesterday':days+' days ago';
   var streakNote='';
-  // simple streak: count consecutive days with sessions
+  // Streak: count consecutive distinct calendar dates (not sessions)
+  var dates=[];
+  sessions.forEach(function(s){
+    var d=new Date(s.date).toDateString();
+    if(dates.indexOf(d)===-1)dates.push(d);
+  });
+  // dates are newest first (sessions are newest first)
   var streak=1;
-  for(var i=1;i<sessions.length;i++){
-    var d=daysSince(sessions[i].date)-daysSince(sessions[i-1].date);
-    if(d>=0&&d<=1)streak++;else break;
+  for(var i=1;i<dates.length;i++){
+    var a=new Date(dates[i-1]);var b=new Date(dates[i]);
+    var diffDays=Math.round((a-b)/(1000*60*60*24));
+    if(diffDays===1)streak++;else break;
   }
   if(streak>=3)streakNote=streak+' days in a row';
 
@@ -847,6 +896,8 @@ function renderWelcomeBack(){
   wb.innerHTML=html;wb.style.display='block';
   var hl=document.getElementById('setup-history-link');
   if(hl)hl.style.display='block';
+  var su=document.getElementById('switch-user-link');
+  if(su)su.style.display='block';
 }
 
 function renderMilestoneBanner(sessionNum){
@@ -1021,6 +1072,44 @@ function showHistory(){
     originEl.style.display='none';
   }
 
+  // Progress chart — wellness scores over time
+  var chartEl=document.getElementById('hist-chart');
+  var scoredSessions=sessions.filter(function(s){return s.wellnessScore;}).slice().reverse(); // oldest first
+  if(scoredSessions.length>=2&&chartEl){
+    var scores=scoredSessions.map(function(s){return s.wellnessScore;});
+    var minScore=Math.max(1,Math.min.apply(null,scores)-1);
+    var maxScore=Math.min(10,Math.max.apply(null,scores)+1);
+    var baselineScore=scores[0];
+    var W=300,H=80,pad=8;
+    function sx(i){return pad+(i/(scores.length-1))*(W-pad*2);}
+    function sy(v){return H-pad-(v-minScore)/(maxScore-minScore)*(H-pad*2);}
+    var pts=scores.map(function(v,i){return sx(i)+','+sy(v);}).join(' ');
+    var areapts=''+sx(0)+','+H+' '+scores.map(function(v,i){return sx(i)+','+sy(v);}).join(' ')+' '+sx(scores.length-1)+','+H;
+    var baselineY=sy(baselineScore);
+    chartEl.innerHTML=
+      '<div class="hist-chart-wrap">'+
+        '<div class="hist-chart-title">Your wellness over time</div>'+
+        '<div class="hist-chart-sub">Based on your self-reported score at each session · anchored to where you started</div>'+
+        '<svg class="hist-chart-svg" viewBox="0 0 '+W+' '+H+'" xmlns="http://www.w3.org/2000/svg">'+
+          '<defs><linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">'+
+            '<stop offset="0%" stop-color="var(--moss)"/><stop offset="100%" stop-color="var(--moss)" stop-opacity="0"/>'+
+          '</linearGradient></defs>'+
+          '<line x1="'+pad+'" y1="'+baselineY+'" x2="'+(W-pad)+'" y2="'+baselineY+'" class="hist-chart-baseline" stroke-width="1"/>'+
+          '<polyline points="'+areapts+'" class="hist-chart-area"/>'+
+          '<polyline points="'+pts+'" class="hist-chart-line" stroke-width="2.5"/>'+
+          scores.map(function(v,i){
+            return '<circle cx="'+sx(i)+'" cy="'+sy(v)+'" r="3.5" class="hist-chart-dot"/>';
+          }).join('')+
+          '<text x="'+pad+'" y="'+(H-1)+'" font-size="9" fill="var(--tl)">Session 1</text>'+
+          '<text x="'+(W-pad)+'" y="'+(H-1)+'" font-size="9" fill="var(--tl)" text-anchor="end">Now</text>'+
+          '<text x="'+(pad+2)+'" y="'+(baselineY-4)+'" font-size="8" fill="var(--tl)" opacity=".7">Where you started</text>'+
+        '</svg>'+
+      '</div>';
+    chartEl.style.display='block';
+  } else if(chartEl){
+    chartEl.style.display='none';
+  }
+
   // Pattern note
   var patternEl=document.getElementById('hist-pattern');
   if(sessions.length>=3){
@@ -1081,6 +1170,36 @@ function histToggle(i){
 }
 // ────────────────────────────────────────────────────────────────
 
+// ── Wellness slider ─────────────────────────────────────────────
+var wellnessScore=5; // current session score
+var FEEL_LABELS={
+  1:'Struggling',2:'Struggling',
+  3:'Low',4:'Low',
+  5:'Getting by',
+  6:'Holding steady',7:'Holding steady',
+  8:'Feeling good',9:'Feeling good',
+  10:'Thriving'
+};
+function sliderMove(val){
+  wellnessScore=parseInt(val);
+  document.getElementById('slider-feel').textContent=FEEL_LABELS[wellnessScore]||'';
+}
+function submitSlider(){
+  show('s-checkin');
+}
+function switchUser(){
+  // Clear name and onboarding but keep sessions (they belong to the device)
+  userName='';
+  try{localStorage.removeItem(SW_OB_KEY);}catch(e){}
+  document.getElementById('user-name').value='';
+  document.getElementById('setup-heading').textContent='Welcome to Stillwell';
+  document.getElementById('setup-para').textContent='Thoughtful, personalised wellness reflections based on how you actually feel. Enter your first name to begin.';
+  document.getElementById('welcome-back').style.display='none';
+  document.getElementById('setup-history-link').style.display='none';
+  document.getElementById('switch-user-link').style.display='none';
+}
+// ────────────────────────────────────────────────────────────────
+
 function startApp(){
   var err=document.getElementById('err-setup');
   err.style.display='none';
@@ -1095,12 +1214,16 @@ function startApp(){
   var ud=parseURL();
   if(ud){health=ud;document.getElementById('detected-banner').style.display='block';document.getElementById('source-options').style.display='none';}
   document.getElementById('shortcut-url').textContent=window.location.href.split('?')[0]+'?sleep=SLEEP&rhr=RHR&hrv=HRV&resp=RESP&steps=STEPS&cal=CALS&ex=EXMINS&stand=STANDHRS';
-  // Route to onboarding if first time
+  // Reset slider
+  wellnessScore=5;
+  var sl=document.getElementById('wellness-slider');if(sl)sl.value=5;
+  var sf=document.getElementById('slider-feel');if(sf)sf.textContent='Getting by';
+  // Route to onboarding if first time, otherwise slider first
   var ob=loadOnboarding();
   if(!ob){
     show('s-onboarding');
   } else {
-    show('s-datasource');
+    show('s-slider');
   }
 }
 function chooseSource(type){
@@ -1304,6 +1427,7 @@ async function getFeedback(){
     var leadActionItems=[];
     if(lp.act){
       lp.act.split('\n').filter(function(l){return l.trim();}).forEach(function(line){
+        // Strip markdown bold markers and leading symbols before matching
         var clean=line.replace(/\*\*/g,'').replace(/^[-•*]\s*/,'').trim();
         leadTags.forEach(function(t){
           if(clean.toUpperCase().indexOf(t.key+':')===0){
@@ -1387,6 +1511,7 @@ async function getFeedback(){
       lead:sc.winner,
       leadName:persona.name,
       leadEmoji:EMO[persona.emoji],
+      wellnessScore:wellnessScore,
       scores:{
         sleep:Math.round(sc.scores.sleep),
         stress:Math.round(sc.scores.stress),
