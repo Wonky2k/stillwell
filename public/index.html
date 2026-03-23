@@ -661,7 +661,7 @@ input[type=range].wellness-slider::-moz-range-thumb{width:26px;height:26px;borde
   </div>
 </div>
 
-<footer>Stillwell prototype &middot; for demonstration purposes only</footer>
+<footer>Stillwell prototype &middot; for demonstration purposes only &middot; v2.1</footer>
 </div>
 <script>
 var P={
@@ -1670,16 +1670,18 @@ async function getFeedback(){
     };
   }
 
+  // Stagger helpers — defined outside try block for browser compatibility
+  function delay(ms){return new Promise(function(r){setTimeout(r,ms);});}
+  function callAPIWithRetry(prompt,retries){
+    retries=retries||2;
+    return callAPI(prompt).catch(function(e){
+      if(retries>0)return delay(1500).then(function(){return callAPIWithRetry(prompt,retries-1);});
+      throw e;
+    });
+  }
+
   try{
     // Stagger calls to avoid concurrency limits
-    function delay(ms){return new Promise(function(r){setTimeout(r,ms);});}
-    function callAPIWithRetry(prompt,retries){
-      retries=retries||2;
-      return callAPI(prompt).catch(function(e){
-        if(retries>0)return delay(1500).then(function(){return callAPIWithRetry(prompt,retries-1);});
-        throw e;
-      });
-    }
     var supportOrder=['sleep','stress','nutrition','exercise'].filter(function(p){return p!==sc.winner;});
     var ci=supportOrder.indexOf(closingPillar);
     if(ci>-1&&ci!==supportOrder.length-1){supportOrder.splice(ci,1);supportOrder.push(closingPillar);}
