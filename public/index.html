@@ -397,15 +397,42 @@ input[type=range].wellness-slider::-moz-range-thumb{width:26px;height:26px;borde
     </div>
   </div>
 
-  <!-- Stage 1: Baseline across 4 pillars -->
+  <!-- Stage 1: About you + Baseline across 4 pillars -->
   <div class="ob-stage" id="ob-stage-1">
     <div class="ob-intro">
       <div class="ob-icon">📍</div>
-      <h2>Your starting point</h2>
-      <p>Honest answers here become the benchmark your team will measure your progress against. Where are you right now, really?</p>
+      <h2>A little about you</h2>
+      <p>A few quick questions so your team can give you personally relevant guidance. Then where you're starting from.</p>
     </div>
     <div class="card">
       <div class="ob-q">
+        <div class="ob-qlabel">How old are you?</div>
+        <div class="ob-opts" id="ob-opts-age">
+          <button class="ob-opt" onclick="obPick(this,'ob-age')">18–34</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-age')">35–49</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-age')">50–64</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-age')">65–79</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-age')">80+</button>
+        </div>
+      </div>
+      <div class="ob-q">
+        <div class="ob-qlabel">Which best describes you?</div>
+        <div class="ob-opts" id="ob-opts-sex">
+          <button class="ob-opt" onclick="obPick(this,'ob-sex')">Male</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-sex')">Female</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-sex')">Prefer not to say</button>
+        </div>
+      </div>
+      <div class="ob-q">
+        <div class="ob-qlabel">How would you describe your general activity level?</div>
+        <div class="ob-opts" id="ob-opts-activity">
+          <button class="ob-opt" onclick="obPick(this,'ob-activity')">Mostly sedentary — desk-based, little regular exercise</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-activity')">Moderately active — some movement, occasional exercise</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-activity')">Regularly active — exercise most days</button>
+          <button class="ob-opt" onclick="obPick(this,'ob-activity')">Athlete — training is a significant part of my life</button>
+        </div>
+      </div>
+      <div class="ob-q" style="margin-top:8px;">
         <div class="ob-qlabel">🌙 How would you describe your sleep right now?</div>
         <div class="ob-opts" id="ob-opts-sleep">
           <button class="ob-opt" onclick="obPick(this,'ob-sleep')">Struggling — I regularly feel unrestored</button>
@@ -645,9 +672,83 @@ var P={
 };
 var EMO={moon:'🌙',leaf:'🌿',grain:'🌾',bolt:'⚡'};
 var DEMO={sleep:6.33,rhr:62,hrv:38,resp:16.1,steps:4200,cal:280,ex:0,stand:7,source:'demo'};
-var AVG={sleep:7.2,rhr:55,hrv:48,resp:14.8,steps:8500,cal:450,ex:35,stand:10};
+
+// Age-and-sex-adjusted reference ranges
+// Format: {low, high} for healthy range; steps uses activity-aware logic
+var REF={
+  rhr:{
+    '18-34':{male:{low:55,high:70},female:{low:58,high:74},neutral:{low:56,high:72}},
+    '35-49':{male:{low:56,high:71},female:{low:59,high:75},neutral:{low:57,high:73}},
+    '50-64':{male:{low:57,high:73},female:{low:61,high:77},neutral:{low:59,high:75}},
+    '65-79':{male:{low:58,high:74},female:{low:62,high:78},neutral:{low:60,high:76}},
+    '80+'  :{male:{low:60,high:78},female:{low:64,high:80},neutral:{low:62,high:79}}
+  },
+  hrv:{
+    '18-34':{male:{low:55,high:100},female:{low:45,high:80},neutral:{low:50,high:90}},
+    '35-49':{male:{low:38,high:75}, female:{low:30,high:60},neutral:{low:34,high:68}},
+    '50-64':{male:{low:25,high:55}, female:{low:22,high:48},neutral:{low:23,high:52}},
+    '65-79':{male:{low:18,high:40}, female:{low:16,high:36},neutral:{low:17,high:38}},
+    '80+'  :{male:{low:12,high:28}, female:{low:10,high:24},neutral:{low:11,high:26}}
+  },
+  sleep:{
+    '18-34':{low:7,high:9},
+    '35-49':{low:7,high:9},
+    '50-64':{low:7,high:8},
+    '65-79':{low:7,high:8},
+    '80+'  :{low:6.5,high:8}
+  },
+  resp:{
+    '18-34':{low:12,high:16},
+    '35-49':{low:12,high:17},
+    '50-64':{low:13,high:18},
+    '65-79':{low:14,high:19},
+    '80+'  :{low:15,high:20}
+  },
+  stand:{
+    '18-49':{low:10,high:13},
+    '50-64':{low:9,high:12},
+    '65-79':{low:8,high:11},
+    '80+'  :{low:7,high:10}
+  }
+};
+
+function getAgeBand(age){
+  if(!age||isNaN(age))return null;
+  if(age<35)return '18-34';
+  if(age<50)return '35-49';
+  if(age<65)return '50-64';
+  if(age<80)return '65-79';
+  return '80+';
+}
+
+function getStandBand(age){
+  if(!age||isNaN(age))return null;
+  if(age<50)return '18-49';
+  if(age<65)return '50-64';
+  if(age<80)return '65-79';
+  return '80+';
+}
+
+function getSexKey(sex){
+  if(sex==='Male')return 'male';
+  if(sex==='Female')return 'female';
+  return 'neutral';
+}
+
+function rangeCtx(val,low,high,unit,higherBetter){
+  if(val==null||isNaN(val))return null;
+  if(val>=low&&val<=high)return 'within healthy range ('+low+'–'+high+unit+')';
+  if(higherBetter){
+    if(val<low)return 'below healthy range ('+low+'–'+high+unit+')';
+    return 'above healthy range — strong';
+  } else {
+    if(val>high)return 'above healthy range ('+low+'–'+high+unit+') — worth noting';
+    return 'below healthy range — strong';
+  }
+}
+
 var apiKey='',userName='',health=null,sawMetrics=false,sel={},openText='',cQs=[],bQs=[],persona=null;
-var obData={why:'',vision:'',baseline:{sleep:'',stress:'',nutrition:'',exercise:''}};
+var obData={why:'',vision:'',baseline:{sleep:'',stress:'',nutrition:'',exercise:''},age:null,sex:'',activityLevel:''};
 var SW_OB_KEY='stillwell_onboarding';
 
 var CQB=[
@@ -748,39 +849,168 @@ function parseURL(){
 
 function buildCtx(){
   if(!health)return 'No wearable data available.';
-  var d=health,a=AVG,lines=[];
-  function fmt(val,avg,unit,label,hb){
-    if(val==null||isNaN(val))return null;
-    var diff=val-avg,pct=Math.round(Math.abs(diff)/avg*100),ctx;
-    if(pct<5)ctx='close to average';
-    else if(hb)ctx=diff>0?'above avg '+avg+unit+' (positive)':'below avg '+avg+unit;
-    else ctx=diff>0?'above avg '+avg+unit:'below avg '+avg+unit+' (positive)';
-    return label+': '+val+unit+' ('+ctx+')';
-  }
+  var d=health,lines=[];
+  var ob=loadOnboarding();
+  var age=ob&&ob.age?parseInt(ob.age):null;
+  var sex=ob&&ob.sex?ob.sex:'';
+  var activity=ob&&ob.activityLevel?ob.activityLevel:'';
+  var band=getAgeBand(age);
+  var skey=getSexKey(sex);
+
+  // Sleep
   if(d.sleep!=null&&!isNaN(d.sleep)){
     var h=Math.floor(d.sleep),m=Math.round((d.sleep-h)*60);
-    lines.push('Sleep: '+(m>0?h+'h '+m+'m':h+'h')+' ('+(d.sleep>=7?'within':'below')+' 7-9hr guideline)');
+    var sleepStr=(m>0?h+'h '+m+'m':h+'h');
+    if(band&&REF.sleep[band]){
+      var sr=REF.sleep[band];
+      var ctx=rangeCtx(d.sleep,sr.low,sr.high,'hrs',true);
+      lines.push('Sleep: '+sleepStr+' ('+ctx+' for age '+band+')');
+    } else {
+      lines.push('Sleep: '+sleepStr+' ('+(d.sleep>=7?'within':'below')+' 7-9hr general guideline)');
+    }
   }
-  [[d.rhr,a.rhr,' bpm','Resting HR',false],[d.hrv,a.hrv,'ms','HRV',true],
-   [d.resp,a.resp,' br/m','Resp rate',false],[d.steps,a.steps,' steps','Steps',true],
-   [d.cal,a.cal,' kcal','Active energy',true],[d.ex,a.ex,' mins','Exercise',true],
-   [d.stand,a.stand,' hrs','Stand hrs',true]].forEach(function(x){var r=fmt(x[0],x[1],x[2],x[3],x[4]);if(r)lines.push(r);});
+
+  // RHR
+  if(d.rhr!=null&&!isNaN(d.rhr)){
+    if(band&&REF.rhr[band]){
+      var r=REF.rhr[band][skey]||REF.rhr[band].neutral;
+      lines.push('Resting HR: '+d.rhr+' bpm ('+rangeCtx(d.rhr,r.low,r.high,'bpm',false)+' for '+(sex||'your')+(sex?' aged ':' age ')+band+')');
+    } else {
+      lines.push('Resting HR: '+d.rhr+' bpm');
+    }
+  }
+
+  // HRV
+  if(d.hrv!=null&&!isNaN(d.hrv)){
+    if(band&&REF.hrv[band]){
+      var r=REF.hrv[band][skey]||REF.hrv[band].neutral;
+      lines.push('HRV: '+d.hrv+'ms ('+rangeCtx(d.hrv,r.low,r.high,'ms',true)+' for '+(sex||'your')+(sex?' aged ':' age ')+band+')');
+    } else {
+      lines.push('HRV: '+d.hrv+'ms');
+    }
+  }
+
+  // Resp
+  if(d.resp!=null&&!isNaN(d.resp)){
+    if(band&&REF.resp[band]){
+      var r=REF.resp[band];
+      lines.push('Resp rate: '+d.resp+' br/m ('+rangeCtx(d.resp,r.low,r.high,'br/m',false)+' for age '+band+')');
+    } else {
+      lines.push('Resp rate: '+d.resp+' br/m');
+    }
+  }
+
+  // Steps — activity-level aware
+  if(d.steps!=null&&!isNaN(d.steps)){
+    var stepCtx='';
+    var isSenior=age&&age>=80;
+    if(activity==='Athlete'||activity==='Regularly active'){
+      stepCtx=d.steps>=10000?'strong active day':d.steps>=7500?'moderate — lower than expected for your activity level':'notably low — rest day or disrupted routine';
+    } else if(activity==='Moderately active'){
+      stepCtx=d.steps>=7500?'healthy range':d.steps>=5000?'moderate':'below expected — movement supports all four pillars';
+    } else {
+      stepCtx=d.steps>=(isSenior?4000:5000)?'good for your activity level':d.steps>=(isSenior?2500:3000)?'moderate':'low — even short walks make a meaningful difference';
+    }
+    lines.push('Steps: '+(d.steps>=1000?(d.steps/1000).toFixed(1)+'k':d.steps)+' ('+stepCtx+')');
+  }
+
+  // Active energy — pattern only, no external benchmark
+  if(d.cal!=null&&!isNaN(d.cal)){
+    lines.push('Active energy: '+d.cal+' kcal (use as a relative indicator — compare to this user\'s own recent pattern only, not a population benchmark)');
+  }
+
+  // Exercise minutes
+  if(d.ex!=null&&!isNaN(d.ex)){
+    var exCtx=d.ex===0?'rest day — valid, but note if pattern across sessions':d.ex>=30?'solid session — meets daily WHO guideline':d.ex>=15?'some movement — consistency matters most':'minimal — short sessions still count';
+    if(age&&age>=65)exCtx+=' (for 65+ balance and strength activity counts alongside cardio)';
+    lines.push('Exercise: '+d.ex+' mins ('+exCtx+')');
+  }
+
+  // Stand hours
+  if(d.stand!=null&&!isNaN(d.stand)){
+    var sb=getStandBand(age);
+    if(sb&&REF.stand[sb]){
+      var r=REF.stand[sb];
+      lines.push('Stand hrs: '+d.stand+' ('+rangeCtx(d.stand,r.low,r.high,'hrs',true)+' for age '+band+')');
+    } else {
+      lines.push('Stand hrs: '+d.stand+' ('+(d.stand>=10?'good posture variation':d.stand>=7?'reasonable':'fewer than ideal — extended sitting adds up')+')');
+    }
+  }
+
   lines.push('Source: '+(d.source==='shortcut'?'Apple Health':'Manual or Demo'));
+  if(age)lines.push('User age: '+age+(band?' (band: '+band+')':''));
+  if(sex)lines.push('User sex: '+sex);
+  if(activity)lines.push('Activity level: '+activity);
   return lines.join('\n');
 }
 
 function buildCards(){
   var c=document.getElementById('metric-cards');if(!c||!health)return;
-  var d=health,a=AVG;
+  var d=health;
+  var ob=loadOnboarding();
+  var age=ob&&ob.age?parseInt(ob.age):null;
+  var sex=ob&&ob.sex?ob.sex:'';
+  var band=getAgeBand(age);
+  var skey=getSexKey(sex);
   var defs=[
-    {key:'sleep',label:'Sleep Duration',disp:function(){var h=Math.floor(d.sleep),m=Math.round((d.sleep-h)*60);return m>0?h+'h '+m+'m':h+'h';},unit:'last night',expl:'Most adults feel best with 7-9 hours. Duration matters but quality matters just as much.',ctx:function(){return d.sleep>=7?'Within the recommended range.':'Below the 7-9 hour guideline.';}},
-    {key:'rhr',label:'Resting Heart Rate',disp:function(){return d.rhr+'';},unit:'bpm',expl:'A day-to-day rise can signal stress, dehydration, or incomplete recovery.',ctx:function(){var x=d.rhr-a.rhr;if(Math.abs(x)<3)return 'Close to your average of '+a.rhr+' bpm.';return x>0?'Above your average — worth noting.':'Below average — a positive sign.';}},
-    {key:'hrv',label:'Heart Rate Variability',disp:function(){return d.hrv+'';},unit:'ms HRV',expl:'More variation is better — it means your nervous system is adaptable and recovered.',ctx:function(){var x=d.hrv-a.hrv;if(Math.abs(x)<3)return 'Close to your average of '+a.hrv+'ms.';return x<0?'Below your average — nervous system may still be processing yesterday.':'Above average — well recovered.';}},
-    {key:'resp',label:'Respiratory Rate',disp:function(){return d.resp+'';},unit:'breaths/min',expl:'A sensitive early indicator of stress. Elevated overnight rate suggests harder recovery.',ctx:function(){var x=d.resp-a.resp;if(Math.abs(x)<0.5)return 'Close to your recent average.';return x>0?'Slightly above average.':'Below average — good recovery sign.';}},
-    {key:'steps',label:'Steps Yesterday',disp:function(){return d.steps>=1000?(d.steps/1000).toFixed(1)+'k':d.steps+'';},unit:'steps',expl:'A reliable general movement indicator. Even light walking benefits sleep and mood.',ctx:function(){if(d.steps>=10000)return 'Great movement day.';if(d.steps>=7500)return 'A healthy amount of movement.';if(d.steps>=5000)return 'Moderate — a little more could help.';return 'Below average — affects sleep and next-day energy.';}},
-    {key:'cal',label:'Active Energy',disp:function(){return d.cal+'';},unit:'kcal burned',expl:'Calories burned through movement — a good proxy for how active your day was.',ctx:function(){var x=d.cal-a.cal;if(Math.abs(x)<30)return 'Close to your recent average.';return x>0?'Above average — an active day.':'Below average.';}},
-    {key:'ex',label:'Exercise Minutes',disp:function(){return d.ex+'';},unit:'mins yesterday',expl:'NHS guidelines suggest 150 mins of moderate activity per week. Short sessions count.',ctx:function(){if(d.ex===0)return 'No recorded exercise — rest is valid but movement supports all four pillars.';if(d.ex>=30)return 'A solid session.';return 'Some movement — consistency matters most.';}},
-    {key:'stand',label:'Stand Hours',disp:function(){return d.stand+'';},unit:'hours',expl:'Regular movement breaks reduce stress hormones and improve energy throughout the day.',ctx:function(){if(d.stand>=10)return 'Good posture variation throughout the day.';if(d.stand>=7)return 'Reasonable movement breaks.';return 'Fewer than ideal — extended sitting adds up.';}}
+    {key:'sleep',label:'Sleep Duration',
+      disp:function(){var h=Math.floor(d.sleep),m=Math.round((d.sleep-h)*60);return m>0?h+'h '+m+'m':h+'h';},
+      unit:'last night',
+      expl:'Duration matters but quality matters just as much. Needs vary with age — most adults feel best within their age-appropriate range.',
+      ctx:function(){
+        if(band&&REF.sleep[band]){var r=REF.sleep[band];return rangeCtx(d.sleep,r.low,r.high,'hrs',true)+' for your age group.';}
+        return d.sleep>=7?'Within the general 7-9 hour guideline.':'Below the general 7-9 hour guideline.';
+      }},
+    {key:'rhr',label:'Resting Heart Rate',
+      disp:function(){return d.rhr+'';},unit:'bpm',
+      expl:'A day-to-day rise can signal stress, dehydration, or incomplete recovery. Lower is generally better within a healthy range.',
+      ctx:function(){
+        if(band&&REF.rhr[band]){var r=REF.rhr[band][skey]||REF.rhr[band].neutral;return rangeCtx(d.rhr,r.low,r.high,'bpm',false)+' for your age and sex.';}
+        return 'No personalised range available.';
+      }},
+    {key:'hrv',label:'Heart Rate Variability',
+      disp:function(){return d.hrv+'';},unit:'ms HRV',
+      expl:'More variation is generally better — it means your nervous system is adaptable. HRV naturally declines with age, so your range is specific to you.',
+      ctx:function(){
+        if(band&&REF.hrv[band]){var r=REF.hrv[band][skey]||REF.hrv[band].neutral;return rangeCtx(d.hrv,r.low,r.high,'ms',true)+' for your age and sex.';}
+        return 'No personalised range available.';
+      }},
+    {key:'resp',label:'Respiratory Rate',
+      disp:function(){return d.resp+'';},unit:'breaths/min',
+      expl:'A sensitive early indicator of stress or illness. Elevated overnight breathing rate suggests harder recovery.',
+      ctx:function(){
+        if(band&&REF.resp[band]){var r=REF.resp[band];return rangeCtx(d.resp,r.low,r.high,'br/m',false)+' for your age group.';}
+        return 'Normal resting range is 12–20 breaths/min.';
+      }},
+    {key:'steps',label:'Steps Yesterday',
+      disp:function(){return d.steps>=1000?(d.steps/1000).toFixed(1)+'k':d.steps+'';},unit:'steps',
+      expl:'A reliable movement indicator. Even short walks benefit sleep, mood, and energy.',
+      ctx:function(){
+        if(d.steps>=10000)return 'Great movement day.';
+        if(d.steps>=7500)return 'A healthy amount of movement.';
+        if(d.steps>=5000)return 'Moderate — a little more could help.';
+        return 'Low — even short walks make a meaningful difference.';
+      }},
+    {key:'cal',label:'Active Energy',
+      disp:function(){return d.cal+'';},unit:'kcal burned',
+      expl:'Calories burned through movement. Most useful as a relative indicator — compare across your own sessions rather than against a fixed target.',
+      ctx:function(){return 'Best interpreted relative to your own recent pattern.'}},
+    {key:'ex',label:'Exercise Minutes',
+      disp:function(){return d.ex+'';},unit:'mins yesterday',
+      expl:'WHO guidelines suggest 150 mins of moderate activity per week. Short sessions count — consistency matters more than duration.',
+      ctx:function(){
+        if(d.ex===0)return 'Rest day — valid, but worth noting if this is a recurring pattern.';
+        if(d.ex>=30)return 'A solid session — meets the daily WHO guideline target.';
+        return 'Some movement — every bit contributes.';
+      }},
+    {key:'stand',label:'Stand Hours',
+      disp:function(){return d.stand+'';},unit:'hours',
+      expl:'Regular movement breaks reduce stress hormones and improve energy throughout the day.',
+      ctx:function(){
+        var sb=getStandBand(age);
+        if(sb&&REF.stand[sb]){var r=REF.stand[sb];return rangeCtx(d.stand,r.low,r.high,'hrs',true)+' for your age group.';}
+        return d.stand>=10?'Good posture variation.':d.stand>=7?'Reasonable movement breaks.':'Fewer than ideal.';
+      }}
   ];
   c.innerHTML='';
   defs.forEach(function(def){
@@ -800,9 +1030,8 @@ function pick(btn,key){
   btn.closest('.card').querySelectorAll('.obtn').forEach(function(b){b.classList.remove('sel');});
   btn.classList.add('sel');sel[key]=btn.textContent.trim();
 }
-// ── Session Memory ──────────────────────────────────────────────
 var SW_KEY='stillwell_sessions';
-var SW_MAX=10; // keep last 10 sessions
+var SW_MAX=30; // keep last 30 sessions
 
 function loadSessions(){
   try{var raw=localStorage.getItem(SW_KEY);return raw?JSON.parse(raw):[];}catch(e){return[];}
@@ -812,7 +1041,7 @@ function saveSessions(sessions){
 }
 function saveSession(record){
   var sessions=loadSessions();
-  sessions.unshift(record); // newest first
+  sessions.unshift(record);
   if(sessions.length>SW_MAX)sessions=sessions.slice(0,SW_MAX);
   saveSessions(sessions);
 }
@@ -828,17 +1057,25 @@ function formatSessionDate(isoDate){
   return d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
 }
 
-function buildHistoryContext(sessions){
+function buildHistoryContext(sessions,condensed){
   if(!sessions||sessions.length===0)return null;
-  var lines=['Previous sessions (most recent first):'];
-  sessions.forEach(function(s,i){
-    var line=formatSessionDate(s.date)+' (session '+s.num+') — Lead: '+s.leadName+' ('+s.lead+').';
-    line+=' Scores: sleep '+s.scores.sleep+', stress '+s.scores.stress+', nutrition '+s.scores.nutrition+', exercise '+s.scores.exercise+'.';
-    if(s.wellnessScore)line+=' Self-reported wellness: '+s.wellnessScore+'/10 ('+( s.wellnessScore<=3?'struggling':s.wellnessScore<=5?'getting by':s.wellnessScore<=7?'holding steady':'feeling good')+').';
-    if(s.energy)line+=' Energy: '+s.energy+'.';
-    if(s.headline)line+=' Summary: "'+s.headline+'".';
-    if(s.actions&&s.actions.length){line+=' Actions given: '+s.actions.join('; ')+'.';}
-    lines.push(line);
+  var lines=[condensed?'Earlier sessions (condensed):':'Previous sessions (most recent first):'];
+  sessions.forEach(function(s){
+    if(condensed){
+      // One-line summary for older sessions
+      var line=formatSessionDate(s.date)+' (session '+s.num+'): '+s.leadName+' led.';
+      if(s.wellnessScore)line+=' Wellness: '+s.wellnessScore+'/10.';
+      if(s.headline)line+=' "'+s.headline+'"';
+      lines.push(line);
+    } else {
+      var line=formatSessionDate(s.date)+' (session '+s.num+') — Lead: '+s.leadName+' ('+s.lead+').';
+      line+=' Scores: sleep '+s.scores.sleep+', stress '+s.scores.stress+', nutrition '+s.scores.nutrition+', exercise '+s.scores.exercise+'.';
+      if(s.wellnessScore)line+=' Self-reported wellness: '+s.wellnessScore+'/10 ('+(s.wellnessScore<=3?'struggling':s.wellnessScore<=5?'getting by':s.wellnessScore<=7?'holding steady':'feeling good')+').';
+      if(s.energy)line+=' Energy: '+s.energy+'.';
+      if(s.headline)line+=' Summary: "'+s.headline+'".';
+      if(s.actions&&s.actions.length){line+=' Actions given: '+s.actions.join('; ')+'.';}
+      lines.push(line);
+    }
   });
   return lines.join('\n');
 }
@@ -969,10 +1206,16 @@ function obNext(stage){
     obData.visionText=visionText;
   } else if(stage===1){
     var err=document.getElementById('err-ob-1');
-    var needed=['ob-sleep','ob-stress','ob-nutrition','ob-exercise'];
+    var needed=['ob-age','ob-sex','ob-activity','ob-sleep','ob-stress','ob-nutrition','ob-exercise'];
     var missing=needed.filter(function(k){return !obPicks[k];});
-    if(missing.length>0){err.textContent='Please answer all four questions — even an approximate answer is fine.';err.style.display='block';return;}
+    if(missing.length>0){err.textContent='Please answer all questions — even an approximate answer is fine.';err.style.display='block';return;}
     err.style.display='none';
+    obData.ageBand=obPicks['ob-age'];
+    // Convert age band to midpoint integer for range lookups
+    var bandMid={'18-34':26,'35-49':42,'50-64':57,'65-79':72,'80+':83};
+    obData.age=bandMid[obPicks['ob-age']]||null;
+    obData.sex=obPicks['ob-sex'];
+    obData.activityLevel=obPicks['ob-activity'].split(' — ')[0]; // store short label
     obData.baseline.sleep=obPicks['ob-sleep'];
     obData.baseline.stress=obPicks['ob-stress'];
     obData.baseline.nutrition=obPicks['ob-nutrition'];
@@ -1057,8 +1300,18 @@ function showHistory(){
     var blHtml=Object.keys(ob.baseline).map(function(p){
       return '<div class="hist-bl-item"><div class="hist-bl-pillar">'+p+'</div><div class="hist-bl-val">'+ob.baseline[p]+'</div></div>';
     }).join('');
+    var profileHtml='';
+    if(ob.ageBand||ob.sex||ob.activityLevel){
+      profileHtml='<div class="hist-origin-label">About you</div>'+
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">'+
+        (ob.ageBand?'<span style="display:inline-block;padding:3px 10px;background:var(--cream);border:1px solid var(--stone);border-radius:12px;font-size:.76rem;color:var(--earth);">Age '+ob.ageBand+'</span>':'')+
+        (ob.sex&&ob.sex!=='Prefer not to say'?'<span style="display:inline-block;padding:3px 10px;background:var(--cream);border:1px solid var(--stone);border-radius:12px;font-size:.76rem;color:var(--earth);">'+ob.sex+'</span>':'')+
+        (ob.activityLevel?'<span style="display:inline-block;padding:3px 10px;background:var(--cream);border:1px solid var(--stone);border-radius:12px;font-size:.76rem;color:var(--earth);">'+ob.activityLevel+'</span>':'')+
+        '</div>';
+    }
     originEl.innerHTML=
       '<div class="hist-origin">'+
+        profileHtml+
         '<div class="hist-origin-label">Why you started</div>'+
         '<div style="margin-bottom:12px;">'+chipsOrText(ob.whyChips,ob.whyText||'')+'</div>'+
         (ob.vision||ob.visionChips&&ob.visionChips.length?
@@ -1262,14 +1515,30 @@ async function getFeedback(){
   // Load history and compute session number
   var pastSessions=loadSessions();
   var sessionNum=pastSessions.length+1;
-  var historyCtx=buildHistoryContext(pastSessions.slice(0,5));
+  // Tiered history: last 7 full detail, 8-14 condensed
+  var recentSessions=pastSessions.slice(0,7);
+  var olderSessions=pastSessions.slice(7,14);
+  var historyCtx=buildHistoryContext(recentSessions);
+  var olderCtx=olderSessions.length>0?buildHistoryContext(olderSessions,true):null;
   var hasHistory=pastSessions.length>0;
+
+  // Session count language tier
+  var langTier=sessionNum<=2?'baseline':sessionNum<=6?'trends':'averages';
+  var langRule=sessionNum<=2
+    ? 'LANGUAGE RULE: This is session '+sessionNum+'. Speak only to today\'s data and the user\'s onboarding baseline. Do NOT reference trends, patterns, or averages — there is not yet enough data to support these claims.'
+    : sessionNum<=6
+    ? 'LANGUAGE RULE: This is session '+sessionNum+'. You may reference emerging trends and themes using language like "over the last few sessions" or "a pattern is starting to emerge". Do NOT claim statistical averages or definitive patterns — the data is still building.'
+    : 'LANGUAGE RULE: This is session '+sessionNum+'. You now have enough data to reference trends, averages, and established patterns with confidence. Use language like "consistently", "on average", and "over the past weeks" where supported by the session history.';
 
   // Build onboarding context block
   var ob=loadOnboarding();
   var onboardingCtx='';
   if(ob&&ob.why){
-    onboardingCtx='\n\n--- WHY THEY CAME TO STILLWELL ---\n'+ob.why+(ob.vision?'\nTheir vision of feeling better: '+ob.vision:'')+'\n\n--- THEIR STARTING BASELINE ---\nSleep: '+ob.baseline.sleep+'\nStress: '+ob.baseline.stress+'\nNutrition: '+ob.baseline.nutrition+'\nMovement: '+ob.baseline.exercise+'\n\nWhen relevant, use this to acknowledge progress or remind them of what they came here for. Do not repeat it mechanically — only surface it when it genuinely adds meaning to what you are saying.';
+    onboardingCtx='\n\n--- USER PROFILE ---\n';
+    if(ob.ageBand)onboardingCtx+='Age band: '+ob.ageBand+'\n';
+    if(ob.sex)onboardingCtx+='Sex: '+ob.sex+'\n';
+    if(ob.activityLevel)onboardingCtx+='Activity level: '+ob.activityLevel+'\n';
+    onboardingCtx+='\n--- WHY THEY CAME TO STILLWELL ---\n'+ob.why+(ob.vision?'\nTheir vision of feeling better: '+ob.vision:'')+'\n\n--- THEIR STARTING BASELINE ---\nSleep: '+ob.baseline.sleep+'\nStress: '+ob.baseline.stress+'\nNutrition: '+ob.baseline.nutrition+'\nMovement: '+ob.baseline.exercise+'\n\nWhen relevant, use the age band and sex to frame metric comparisons accurately. When relevant, use why they came to acknowledge progress or remind them of their goal. Do not repeat this information mechanically.';
   }
 
   // Setup header
@@ -1321,7 +1590,17 @@ async function getFeedback(){
 
   var namingRule='Address the user directly as "you" throughout — every sentence speaks to them, not about them. '+(nameAddr?'Use their name ('+nameAddr+') once only, at or near the start of your message. After that, use "you" only.':'Do not use a name.');
 
-  var historyBlock=(historyCtx?'\n\n--- SESSION HISTORY (use this to identify trends, improvements, and persistent patterns) ---\n'+historyCtx+'\n\nIMPORTANT: If you can see meaningful change — improvement OR deterioration — name it directly. If a pattern has repeated across sessions, acknowledge it has persisted. If today is the first session, treat it as a baseline.':'')+onboardingCtx;
+  var historyBlock='';
+  if(historyCtx){
+    historyBlock+='\n\n--- SESSION HISTORY — RECENT (full detail) ---\n'+historyCtx;
+    if(olderCtx)historyBlock+='\n\n--- SESSION HISTORY — EARLIER (condensed) ---\n'+olderCtx;
+    historyBlock+='\n\n'+langRule;
+    if(langTier==='baseline')historyBlock+='\nIf this is the first session, acknowledge that the team is meeting the user for the first time and treat today\'s data as the starting point.';
+  } else {
+    historyBlock='\n\n'+langRule+'\nThis is the first session. Treat everything as a baseline. No comparisons, no trends.';
+  }
+  historyBlock+='\n\nCLINICAL DISCLAIMER: You are a wellness coach, not a clinician. You may note where a reading sits relative to healthy ranges for the user\'s age and sex, but you never diagnose, never alarm, and always suggest speaking to a GP if the user has concerns about a specific metric.';
+  historyBlock+=onboardingCtx;
 
   // Lead prompt — includes history, requests headline for storage
   var leadPrompt=persona.voice+'\n\nYou are speaking directly to '+(nameAddr||'a user')+' as part of their Stillwell wellness session (session '+sessionNum+').\n\n--- HOW THEY FEEL TODAY ---\n'+(cCtx||'Minimal responses.')+'\n'+(openText?'In their own words: "'+openText+'"':'')+'\n\n--- WEARABLE DATA ---\n'+dataCtx+'\n'+metricsNote+'\n\n--- YESTERDAY BEHAVIOURS ---\n'+(bCtx||'Skipped.')+'\n\n--- PILLAR ANALYSIS ---\n'+ss+historyBlock+'\n\n--- YOUR TASK ---\nWrite a THREE-PART response.\n\n'+namingRule+'\n\nPART 1 — OUTPUT LABEL: ---HEADLINE---\nOne sentence only (max 12 words). A plain summary of today\'s session from your perspective — e.g. "Sleep improving but stress patterns persisting into week two." This will be stored and shown to the user next time as a reminder of this session. No names.\n\nPART 2 — OUTPUT LABEL: ---SUMMARY---\nOne sentence only. A warm, direct observation about what stands out most to you from their session today. This is what the user sees first, before choosing to read more.'+(hasHistory?' If there is meaningful change or progress since last session, lead with that.':'')+'\n\nPART 3 — OUTPUT LABEL: ---FULL---\nThree short paragraphs, max 160 words total.\nParagraph 1: Acknowledge how they feel today — one sentence, warm and specific.'+(hasHistory?' If relevant, reference what has changed since you last saw them — improvement or deterioration.':'')+'\nParagraph 2: Two to three sentences. Name the clearest pattern connecting their behaviours to their body\'s response. Speak to them directly.\nParagraph 3: Two sentences. First — what they will likely keep experiencing if this continues. Second — what they can expect within 24-48 hours if they act now. Make it worth looking forward to.\n\nThen output this label on its own line: ---ACTIONS---\nThen write exactly TWO actions:\nTONIGHT: [specific action and why it helps]\nTOMORROW: [specific action and its likely benefit]\n\nRules: Stay in character. Warm and direct, not clinical. No bullet points inside paragraphs.';
