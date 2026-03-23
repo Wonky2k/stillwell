@@ -784,14 +784,26 @@ var BQB=[
 
 function scorePillars(){
   var s={sleep:0,stress:0,nutrition:0,exercise:0};
-  var d=health||{},a=AVG;
+  var d=health||{};
+  // Use personalised midpoints from reference ranges if onboarding available,
+  // otherwise fall back to general population midpoints for scoring only
+  var ob=loadOnboarding();
+  var band=getAgeBand(ob&&ob.age?parseInt(ob.age):null)||'35-49';
+  var skey=getSexKey(ob&&ob.sex?ob.sex:'');
+  var rhrRef=REF.rhr[band][skey]||REF.rhr[band].neutral;
+  var hrvRef=REF.hrv[band][skey]||REF.hrv[band].neutral;
+  var sleepRef=REF.sleep[band];
+  var rhrMid=(rhrRef.low+rhrRef.high)/2;
+  var hrvMid=(hrvRef.low+hrvRef.high)/2;
+  var sleepMid=(sleepRef.low+sleepRef.high)/2;
+  var stepsMid=8000,exMid=25;
   function pdev(val,avg){return val!=null&&!isNaN(val)?(avg-val)/avg:0;}
   function ndev(val,avg){return val!=null&&!isNaN(val)?(val-avg)/avg:0;}
-  var sd=pdev(d.sleep,a.sleep);if(sd>0.08)s.sleep+=sd*40;
-  var rd=ndev(d.rhr,a.rhr);if(rd>0.05)s.stress+=rd*30;
-  var hd=pdev(d.hrv,a.hrv);if(hd>0.05)s.stress+=hd*35;
-  var ed=pdev(d.ex,a.ex);if(ed>0.10)s.exercise+=ed*25;
-  var stepd=pdev(d.steps,a.steps);if(stepd>0.10)s.exercise+=stepd*20;
+  var sd=pdev(d.sleep,sleepMid);if(sd>0.08)s.sleep+=sd*40;
+  var rd=ndev(d.rhr,rhrMid);if(rd>0.05)s.stress+=rd*30;
+  var hd=pdev(d.hrv,hrvMid);if(hd>0.05)s.stress+=hd*35;
+  var ed=pdev(d.ex,exMid);if(ed>0.10)s.exercise+=ed*25;
+  var stepd=pdev(d.steps,stepsMid);if(stepd>0.10)s.exercise+=stepd*20;
   var neg={
     sleep:['Depleted','Low but steady','Groggy and reluctant','Sluggish','Poorly','Restless','Already fading','Starting to flag'],
     stress:['Very high','Elevated','Background hum','Scattered and racing','Unfocused','Running on empty','Stretched thin','Quite a lot','Some tightness'],
