@@ -909,6 +909,8 @@ var apiKey='',userName='',health=null,sawMetrics=false,sel={},openText='',cQs=[]
 var sessionType='deep'; // 'light' or 'deep'
 var energyScore=5,isLightSession=false;
 var SW_CHAPTER_KEY='stillwell_chapter';
+// Session context vars — set at start of getFeedback, shared with helper functions
+var _nameAddr='',_sessionNum=1,_hasHistory=false,_langRule='',_historyBlock='',_dataCtx='',_metricsNote='',_sessionSummary='',_sc=null,_closingPillar='sleep';
 var obData={why:'',vision:'',baseline:{sleep:'',stress:'',nutrition:'',exercise:''},age:null,sex:'',activityLevel:''};
 var SW_OB_KEY='stillwell_onboarding';
 
@@ -1994,10 +1996,11 @@ function supportPrompt(sp,isClosing){
   var roleNote=isClosing
     ? 'You are the final voice. Add something that helps the user feel clear and ready to act — your own angle that leaves them with momentum. Two to three sentences.'
     : 'Add your perspective in two to three sentences — specific, grounded, directed at the user.';
-  return sp.voice+'\n\nYou are speaking directly to '+(nameAddr||'a user')+' as part of their Stillwell wellness session (session '+sessionNum+'). '+roleNote+'\n\n'+namingRule+historyBlock+'\n\n--- SESSION DATA ---\n'+sessionSummary+'\n\n--- WEARABLE DATA ---\n'+dataCtx+'\n'+metricsNote+'\n\n--- YOUR TASK ---\nWrite a TWO-PART response.\n\nPART 1 — OUTPUT LABEL: ---SUMMARY---\nOne sentence. Your sharpest, most direct observation for this user from your '+sp.key+' expertise.'+(hasHistory?' If there is meaningful change — improvement or decline — in your area since previous sessions, lead with that.':'')+' Speak to them, not about them.\n\nPART 2 — OUTPUT LABEL: ---FULL---\nTwo to three sentences in your persona voice. Bring something concrete from the session. Offer your unique '+sp.key+' angle — something the '+sc.winner+' lead would not naturally cover. Every sentence addressed to "you".\n\nRules: Do NOT start with "I". No references to other team members. No preamble. No sign-off.';
+  var namingRule='Address the user directly as "you" throughout. '+(_nameAddr?'Use their name ('+_nameAddr+') once only, at or near the start. After that, use "you" only.':'Do not use a name.');
+  return sp.voice+'\n\nYou are speaking directly to '+(_nameAddr||'a user')+' as part of their Stillwell wellness session (session '+_sessionNum+'). '+roleNote+'\n\n'+namingRule+_historyBlock+'\n\n--- SESSION DATA ---\n'+_sessionSummary+'\n\n--- WEARABLE DATA ---\n'+_dataCtx+'\n'+_metricsNote+'\n\n--- YOUR TASK ---\nWrite a TWO-PART response.\n\nPART 1 — OUTPUT LABEL: ---SUMMARY---\nOne sentence. Your sharpest, most direct observation for this user from your '+sp.key+' expertise.'+(_hasHistory?' If there is meaningful change — improvement or decline — in your area since previous sessions, lead with that.':'')+' Speak to them, not about them.\n\nPART 2 — OUTPUT LABEL: ---FULL---\nTwo to three sentences in your persona voice. Bring something concrete from the session. Offer your unique '+sp.key+' angle — something the '+(_sc?_sc.winner:'sleep')+' lead would not naturally cover. Every sentence addressed to "you".\n\nRules: Do NOT start with "I". No references to other team members. No preamble. No sign-off.';
 }
 function secondActionPrompt(sp2){
-  return sp2.voice+'\n\nWrite a single "also try this" suggestion for '+(nameAddr||'the user')+' for the coming week, from your '+sp2.key+' expertise. Session '+sessionNum+'.\n\n--- SESSION DATA ---\n'+sessionSummary+historyBlock+'\n\n--- WEARABLE DATA ---\n'+dataCtx+'\n'+metricsNote+'\n\nOne or two sentences: the action and why it helps. Concrete and specific. Speak directly to "you".\n\nOutput label: ALSO TRY:\nThen your suggestion.';
+  return sp2.voice+'\n\nWrite a single "also try this" suggestion for '+(_nameAddr||'the user')+' for the coming week, from your '+sp2.key+' expertise. Session '+_sessionNum+'.\n\n--- SESSION DATA ---\n'+_sessionSummary+_historyBlock+'\n\n--- WEARABLE DATA ---\n'+_dataCtx+'\n'+_metricsNote+'\n\nOne or two sentences: the action and why it helps. Concrete and specific. Speak directly to "you".\n\nOutput label: ALSO TRY:\nThen your suggestion.';
 }
 function makeLoadingBubble(pkey,loadText){
   var sp=P[pkey];
@@ -2122,7 +2125,6 @@ async function getFeedback(){
   delete scoresCopy[sc.winner];
   var closingPillar=Object.keys(scoresCopy).reduce(function(a,b){return scoresCopy[a]>=scoresCopy[b]?a:b;});
 
-
   var namingRule='Address the user directly as "you" throughout — every sentence speaks to them, not about them. '+(nameAddr?'Use their name ('+nameAddr+') once only, at or near the start of your message. After that, use "you" only.':'Do not use a name.');
 
   var historyBlock='';
@@ -2137,7 +2139,10 @@ async function getFeedback(){
   historyBlock+='\n\nCLINICAL DISCLAIMER: You are a wellness coach, not a clinician. You may note where a reading sits relative to healthy ranges for the user\'s age and sex, but you never diagnose, never alarm, and always suggest speaking to a GP if the user has concerns about a specific metric.';
   historyBlock+=onboardingCtx;
 
-  // Lead prompt — includes history, requests headline for storage
+  // Set module-level context so extracted helper functions can access them
+  _nameAddr=nameAddr;_sessionNum=sessionNum;_hasHistory=hasHistory;
+  _langRule=langRule;_historyBlock=historyBlock;_dataCtx=dataCtx;
+  _metricsNote=metricsNote;_sessionSummary=sessionSummary;_sc=sc;_closingPillar=closingPillar;
   var leadPrompt=persona.voice+'\n\nYou are speaking directly to '+(nameAddr||'a user')+' as part of their Stillwell wellness session (session '+sessionNum+').\n\n--- HOW THEY FEEL TODAY ---\n'+(cCtx||'Minimal responses.')+'\n'+(openText?'In their own words: "'+openText+'"':'')+'\n\n--- WEARABLE DATA ---\n'+dataCtx+'\n'+metricsNote+'\n\n--- YESTERDAY BEHAVIOURS ---\n'+(bCtx||'Skipped.')+'\n\n--- PILLAR ANALYSIS ---\n'+ss+historyBlock+'\n\n--- YOUR TASK ---\nWrite a THREE-PART response.\n\n'+namingRule+'\n\nPART 1 — OUTPUT LABEL: ---HEADLINE---\nOne sentence only (max 12 words). A plain summary of today\'s session from your perspective — e.g. "Sleep improving but stress patterns persisting into week two." This will be stored and shown to the user next time as a reminder of this session. No names.\n\nPART 2 — OUTPUT LABEL: ---SUMMARY---\nOne sentence only. A warm, direct observation about what stands out most to you from their session today. This is what the user sees first, before choosing to read more.'+(hasHistory?' If there is meaningful change or progress since last session, lead with that.':'')+'\n\nPART 3 — OUTPUT LABEL: ---FULL---\nThree short paragraphs, max 160 words total.\nParagraph 1: Acknowledge how they feel today — one sentence, warm and specific.'+(hasHistory?' If relevant, reference what has changed since you last saw them — improvement or deterioration.':'')+'\nParagraph 2: Two to three sentences. Name the clearest pattern connecting their behaviours to their body\'s response. Speak to them directly.\nParagraph 3: Two sentences. First — what they will likely keep experiencing if this continues. Second — what they can expect within 24-48 hours if they act now. Make it worth looking forward to.\n\nThen output this label on its own line: ---ACTIONS---\nThen write exactly TWO actions:\nTONIGHT: [specific action and why it helps]\nTOMORROW: [specific action and its likely benefit]\n\nRules: Stay in character. Warm and direct, not clinical. No bullet points inside paragraphs.';
 
 
