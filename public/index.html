@@ -1953,6 +1953,69 @@ async function getChapterCloseMessage(ch){
 }
 // ────────────────────────────────────────────────────────────────
 
+// ── getFeedback helpers (extracted for browser compatibility) ──────────
+function callAPI(prompt){
+  return fetch('/api/proxy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1000,messages:[{role:'user',content:prompt}]})})
+  .then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error(d&&d.error&&d.error.message||'Request failed ('+r.status+')');return d;});});
+}
+function supportPrompt(sp,isClosing){
+  var roleNote=isClosing
+    ? 'You are the final voice. Add something that helps the user feel clear and ready to act — your own angle that leaves them with momentum. Two to three sentences.'
+    : 'Add your perspective in two to three sentences — specific, grounded, directed at the user.';
+  return sp.voice+'\n\nYou are speaking directly to '+(nameAddr||'a user')+' as part of their Stillwell wellness session (session '+sessionNum+'). '+roleNote+'\n\n'+namingRule+historyBlock+'\n\n--- SESSION DATA ---\n'+sessionSummary+'\n\n--- WEARABLE DATA ---\n'+dataCtx+'\n'+metricsNote+'\n\n--- YOUR TASK ---\nWrite a TWO-PART response.\n\nPART 1 — OUTPUT LABEL: ---SUMMARY---\nOne sentence. Your sharpest, most direct observation for this user from your '+sp.key+' expertise.'+(hasHistory?' If there is meaningful change — improvement or decline — in your area since previous sessions, lead with that.':'')+' Speak to them, not about them.\n\nPART 2 — OUTPUT LABEL: ---FULL---\nTwo to three sentences in your persona voice. Bring something concrete from the session. Offer your unique '+sp.key+' angle — something the '+sc.winner+' lead would not naturally cover. Every sentence addressed to "you".\n\nRules: Do NOT start with "I". No references to other team members. No preamble. No sign-off.';
+}
+function secondActionPrompt(sp2){
+  return sp2.voice+'\n\nWrite a single "also try this" suggestion for '+(nameAddr||'the user')+' for the coming week, from your '+sp2.key+' expertise. Session '+sessionNum+'.\n\n--- SESSION DATA ---\n'+sessionSummary+historyBlock+'\n\n--- WEARABLE DATA ---\n'+dataCtx+'\n'+metricsNote+'\n\nOne or two sentences: the action and why it helps. Concrete and specific. Speak directly to "you".\n\nOutput label: ALSO TRY:\nThen your suggestion.';
+}
+function makeLoadingBubble(pkey,loadText){
+  var sp=P[pkey];
+  var msg=document.createElement('div');msg.className='msg';
+  msg.innerHTML=
+    '<div class="msg-avatar msg-avatar-'+pkey+'">'+EMO[sp.emoji]+'</div>'+
+    '<div class="msg-content">'+
+      '<div class="msg-meta">'+
+        '<span class="msg-name msg-name-'+pkey+'">'+sp.name+'</span>'+
+        '<span class="msg-tagline">· '+sp.tagline+'</span>'+
+      '</div>'+
+      '<div class="msg-bubble msg-bubble-'+pkey+' msg-bubble-loading" id="mbubble-'+pkey+'">'+
+        '<div class="loading" style="padding:6px 0 4px;text-align:left;">'+
+          '<div class="dots"><span></span><span></span><span></span></div>'+
+          '<div class="ltext">'+loadText+'</div>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  return msg;
+}
+function renderBubble(pkey,summaryText,fullText,actionHtml){
+  var bubble=document.getElementById('mbubble-'+pkey);
+  if(!bubble)return;
+  var detailId='detail-'+pkey;var arrowId='arrow-'+pkey;
+  var fullHtml=fullText.split(/\n\n+/).filter(function(p){return p.trim();}).map(function(p){return '<p>'+p.trim()+'</p>';}).join('');
+  bubble.classList.remove('msg-bubble-loading');
+  bubble.innerHTML=
+    '<div class="bubble-summary">'+summaryText+'</div>'+
+    '<div class="bubble-hint bubble-hint-'+pkey+'">'+
+      '<span>Read full assessment</span>'+
+      '<span class="bubble-hint-arrow" id="'+arrowId+'">&#8964;</span>'+
+    '</div>';
+  var detail=document.createElement('div');
+  detail.id=detailId;detail.className='bubble-detail bubble-detail-'+pkey;
+  detail.innerHTML=fullHtml+(actionHtml?'<div class="detail-action detail-action-'+pkey+'">'+actionHtml+'</div>':'');
+  bubble.parentNode.appendChild(detail);
+  bubble.onclick=function(){
+    var isOpen=detail.classList.toggle('open');
+    document.getElementById(arrowId).classList.toggle('open',isOpen);
+  };
+}
+function delay(ms){return new Promise(function(r){setTimeout(r,ms);});}
+function callAPIWithRetry(prompt,retries){
+  retries=retries||2;
+  return callAPI(prompt).catch(function(e){
+    if(retries>0)return delay(1500).then(function(){return callAPIWithRetry(prompt,retries-1);});
+    throw e;
+  });
+}
+
 async function getFeedback(){
   var sc=scorePillars();persona=P[sc.winner];
 
@@ -2027,10 +2090,6 @@ async function getFeedback(){
   delete scoresCopy[sc.winner];
   var closingPillar=Object.keys(scoresCopy).reduce(function(a,b){return scoresCopy[a]>=scoresCopy[b]?a:b;});
 
-  function callAPI(prompt){
-    return fetch('/api/proxy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1000,messages:[{role:'user',content:prompt}]})})
-    .then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error(d&&d.error&&d.error.message||'Request failed ('+r.status+')');return d;});});
-  }
 
   var namingRule='Address the user directly as "you" throughout — every sentence speaks to them, not about them. '+(nameAddr?'Use their name ('+nameAddr+') once only, at or near the start of your message. After that, use "you" only.':'Do not use a name.');
 
@@ -2049,68 +2108,11 @@ async function getFeedback(){
   // Lead prompt — includes history, requests headline for storage
   var leadPrompt=persona.voice+'\n\nYou are speaking directly to '+(nameAddr||'a user')+' as part of their Stillwell wellness session (session '+sessionNum+').\n\n--- HOW THEY FEEL TODAY ---\n'+(cCtx||'Minimal responses.')+'\n'+(openText?'In their own words: "'+openText+'"':'')+'\n\n--- WEARABLE DATA ---\n'+dataCtx+'\n'+metricsNote+'\n\n--- YESTERDAY BEHAVIOURS ---\n'+(bCtx||'Skipped.')+'\n\n--- PILLAR ANALYSIS ---\n'+ss+historyBlock+'\n\n--- YOUR TASK ---\nWrite a THREE-PART response.\n\n'+namingRule+'\n\nPART 1 — OUTPUT LABEL: ---HEADLINE---\nOne sentence only (max 12 words). A plain summary of today\'s session from your perspective — e.g. "Sleep improving but stress patterns persisting into week two." This will be stored and shown to the user next time as a reminder of this session. No names.\n\nPART 2 — OUTPUT LABEL: ---SUMMARY---\nOne sentence only. A warm, direct observation about what stands out most to you from their session today. This is what the user sees first, before choosing to read more.'+(hasHistory?' If there is meaningful change or progress since last session, lead with that.':'')+'\n\nPART 3 — OUTPUT LABEL: ---FULL---\nThree short paragraphs, max 160 words total.\nParagraph 1: Acknowledge how they feel today — one sentence, warm and specific.'+(hasHistory?' If relevant, reference what has changed since you last saw them — improvement or deterioration.':'')+'\nParagraph 2: Two to three sentences. Name the clearest pattern connecting their behaviours to their body\'s response. Speak to them directly.\nParagraph 3: Two sentences. First — what they will likely keep experiencing if this continues. Second — what they can expect within 24-48 hours if they act now. Make it worth looking forward to.\n\nThen output this label on its own line: ---ACTIONS---\nThen write exactly TWO actions:\nTONIGHT: [specific action and why it helps]\nTOMORROW: [specific action and its likely benefit]\n\nRules: Stay in character. Warm and direct, not clinical. No bullet points inside paragraphs.';
 
-  function supportPrompt(sp,isClosing){
-    var roleNote=isClosing
-      ? 'You are the final voice. Add something that helps the user feel clear and ready to act — your own angle that leaves them with momentum. Two to three sentences.'
-      : 'Add your perspective in two to three sentences — specific, grounded, directed at the user.';
-    return sp.voice+'\n\nYou are speaking directly to '+(nameAddr||'a user')+' as part of their Stillwell wellness session (session '+sessionNum+'). '+roleNote+'\n\n'+namingRule+historyBlock+'\n\n--- SESSION DATA ---\n'+sessionSummary+'\n\n--- WEARABLE DATA ---\n'+dataCtx+'\n'+metricsNote+'\n\n--- YOUR TASK ---\nWrite a TWO-PART response.\n\nPART 1 — OUTPUT LABEL: ---SUMMARY---\nOne sentence. Your sharpest, most direct observation for this user from your '+sp.key+' expertise.'+(hasHistory?' If there is meaningful change — improvement or decline — in your area since previous sessions, lead with that.':'')+' Speak to them, not about them.\n\nPART 2 — OUTPUT LABEL: ---FULL---\nTwo to three sentences in your persona voice. Bring something concrete from the session. Offer your unique '+sp.key+' angle — something the '+sc.winner+' lead would not naturally cover. Every sentence addressed to "you".\n\nRules: Do NOT start with "I". No references to other team members. No preamble. No sign-off.';
-  }
 
-  function secondActionPrompt(sp2){
-    return sp2.voice+'\n\nWrite a single "also try this" suggestion for '+(nameAddr||'the user')+' for the coming week, from your '+sp2.key+' expertise. Session '+sessionNum+'.\n\n--- SESSION DATA ---\n'+sessionSummary+historyBlock+'\n\n--- WEARABLE DATA ---\n'+dataCtx+'\n'+metricsNote+'\n\nOne or two sentences: the action and why it helps. Concrete and specific. Speak directly to "you".\n\nOutput label: ALSO TRY:\nThen your suggestion.';
-  }
 
-  function makeLoadingBubble(pkey,loadText){
-    var sp=P[pkey];
-    var msg=document.createElement('div');msg.className='msg';
-    msg.innerHTML=
-      '<div class="msg-avatar msg-avatar-'+pkey+'">'+EMO[sp.emoji]+'</div>'+
-      '<div class="msg-content">'+
-        '<div class="msg-meta">'+
-          '<span class="msg-name msg-name-'+pkey+'">'+sp.name+'</span>'+
-          '<span class="msg-tagline">· '+sp.tagline+'</span>'+
-        '</div>'+
-        '<div class="msg-bubble msg-bubble-'+pkey+' msg-bubble-loading" id="mbubble-'+pkey+'">'+
-          '<div class="loading" style="padding:6px 0 4px;text-align:left;">'+
-            '<div class="dots"><span></span><span></span><span></span></div>'+
-            '<div class="ltext">'+loadText+'</div>'+
-          '</div>'+
-        '</div>'+
-      '</div>';
-    return msg;
-  }
 
-  function renderBubble(pkey,summaryText,fullText,actionHtml){
-    var bubble=document.getElementById('mbubble-'+pkey);
-    if(!bubble)return;
-    var detailId='detail-'+pkey;var arrowId='arrow-'+pkey;
-    var fullHtml=fullText.split(/\n\n+/).filter(function(p){return p.trim();}).map(function(p){return '<p>'+p.trim()+'</p>';}).join('');
-    bubble.classList.remove('msg-bubble-loading');
-    bubble.innerHTML=
-      '<div class="bubble-summary">'+summaryText+'</div>'+
-      '<div class="bubble-hint bubble-hint-'+pkey+'">'+
-        '<span>Read full assessment</span>'+
-        '<span class="bubble-hint-arrow" id="'+arrowId+'">&#8964;</span>'+
-      '</div>';
-    var detail=document.createElement('div');
-    detail.id=detailId;detail.className='bubble-detail bubble-detail-'+pkey;
-    detail.innerHTML=fullHtml+(actionHtml?'<div class="detail-action detail-action-'+pkey+'">'+actionHtml+'</div>':'');
-    bubble.parentNode.appendChild(detail);
-    bubble.onclick=function(){
-      var isOpen=detail.classList.toggle('open');
-      document.getElementById(arrowId).classList.toggle('open',isOpen);
-    };
-  }
 
   // Stagger helpers — defined outside try block for browser compatibility
-  function delay(ms){return new Promise(function(r){setTimeout(r,ms);});}
-  function callAPIWithRetry(prompt,retries){
-    retries=retries||2;
-    return callAPI(prompt).catch(function(e){
-      if(retries>0)return delay(1500).then(function(){return callAPIWithRetry(prompt,retries-1);});
-      throw e;
-    });
-  }
 
   try{
     // Stagger calls to avoid concurrency limits
