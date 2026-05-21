@@ -979,6 +979,38 @@ var BQB=[
   {pillar:'exercise',key:'energy_ex',text:'How did physical activity affect your energy yesterday?',opts:['Drained me','Left me flat','Neutral','Boosted it','Significantly energised me']}
 ];
 
+function scorePillars(){
+  var s={sleep:0,stress:0,nutrition:0,exercise:0};
+  var d=health||{};
+  var ob=loadOnboarding();
+  var band=getAgeBand(ob&&ob.age?parseInt(ob.age):null)||'35-49';
+  var skey=getSexKey(ob&&ob.sex?ob.sex:'');
+  var rhrRef=REF.rhr[band][skey]||REF.rhr[band].neutral;
+  var hrvRef=REF.hrv[band][skey]||REF.hrv[band].neutral;
+  var sleepRef=REF.sleep[band];
+  var rhrMid=(rhrRef.low+rhrRef.high)/2;
+  var hrvMid=(hrvRef.low+hrvRef.high)/2;
+  var sleepMid=(sleepRef.low+sleepRef.high)/2;
+  var stepsMid=8000,exMid=25;
+  function pdev(val,avg){return val!=null&&!isNaN(val)?(avg-val)/avg:0;}
+  function ndev(val,avg){return val!=null&&!isNaN(val)?(val-avg)/avg:0;}
+  var sd=pdev(d.sleep,sleepMid);if(sd>0.08)s.sleep+=sd*40;
+  var rd=ndev(d.rhr,rhrMid);if(rd>0.05)s.stress+=rd*30;
+  var hd=pdev(d.hrv,hrvMid);if(hd>0.05)s.stress+=hd*35;
+  var ed=pdev(d.ex,exMid);if(ed>0.10)s.exercise+=ed*25;
+  var stepd=pdev(d.steps,stepsMid);if(stepd>0.10)s.exercise+=stepd*20;
+  var neg={
+    sleep:['Depleted','Low but steady','Groggy and reluctant','Sluggish','Poorly','Restless','Already fading','Starting to flag'],
+    stress:['Very high','Elevated','Background hum','Scattered and racing','Unfocused','Running on empty','Stretched thin','Quite a lot','Some tightness'],
+    nutrition:['Quite dehydrated','Could drink more','Craving everything','Hungrier than usual','After 9pm','Around 8-9pm','More than a couple','A couple','Late afternoon or evening','Grabbed what I could','Fairly poor'],
+    exercise:['Needs rest','Heavy and reluctant','Sore or stiff','A little tight','No movement','A short walk','Almost all day','Most of the day']
+  };
+  Object.keys(sel).forEach(function(k){var v=sel[k];Object.keys(neg).forEach(function(p){if(neg[p].indexOf(v)>=0)s[p]+=12;});});
+  var winner='sleep',high=-1;
+  Object.keys(s).forEach(function(p){if(s[p]>high){high=s[p];winner=p;}});
+  return{winner:winner,scores:s};
+}
+
 var SW_QR_KEY='stillwell_qrotation';
 function loadQRotation(){try{var r=localStorage.getItem(SW_QR_KEY);return r?JSON.parse(r):{cq:[],bq:[]};}catch(e){return{cq:[],bq:[]};}}
 function saveQRotation(r){try{localStorage.setItem(SW_QR_KEY,JSON.stringify(r));}catch(e){}}
