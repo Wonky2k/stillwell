@@ -283,7 +283,61 @@ footer{text-align:center;padding:16px 0 40px;font-size:.72rem;color:var(--stone)
 .hist-session-headline-full{font-size:.84rem;color:var(--text);line-height:1.6;margin-bottom:12px;padding-top:14px;font-style:italic;}
 .hist-actions-title{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:8px;}
 .hist-no-sessions{text-align:center;padding:40px 0;color:var(--tl);font-size:.88rem;font-style:italic;}
-/* ── Wellness slider ── */
+/* ── Session gate ── */
+.gate-screen{text-align:center;padding:16px 0 32px;}
+.gate-icon{font-size:2.2rem;margin-bottom:16px;}
+.gate-title{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;color:var(--earth);margin-bottom:10px;}
+.gate-sub{font-size:.88rem;color:var(--tl);line-height:1.7;margin-bottom:32px;}
+.gate-persona-focus{background:var(--cream);border:1px solid var(--stone);border-radius:12px;padding:14px 18px;margin-bottom:28px;display:flex;align-items:center;gap:12px;text-align:left;}
+.gate-persona-focus-avatar{font-size:1.3rem;flex-shrink:0;}
+.gate-persona-focus-text{font-size:.84rem;color:var(--text);line-height:1.55;}
+.gate-persona-focus-name{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--tl);margin-bottom:3px;}
+.gate-btn-primary{width:100%;max-width:400px;padding:15px 24px;background:var(--earth);color:var(--cream);border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.95rem;cursor:pointer;margin-bottom:12px;transition:opacity .2s;}
+.gate-btn-primary:hover{opacity:.9;}
+.gate-btn-light{width:100%;max-width:400px;padding:13px 24px;background:transparent;color:var(--tl);border:1px solid var(--stone);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.88rem;cursor:pointer;transition:all .2s;}
+.gate-btn-light:hover{border-color:var(--bark);color:var(--bark);}
+/* ── Light session ── */
+.light-header{text-align:center;padding:12px 0 24px;}
+.light-header .lh-icon{font-size:1.6rem;margin-bottom:10px;}
+.light-header .lh-title{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;color:var(--earth);margin-bottom:6px;}
+.light-header .lh-sub{font-size:.82rem;color:var(--tl);font-style:italic;}
+.light-focus{background:var(--cream);border:1px solid var(--stone);border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:.85rem;color:var(--text);line-height:1.6;}
+.light-focus-label{font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--tl);margin-bottom:5px;}
+.light-sliders{margin-bottom:20px;}
+.light-slider-row{margin-bottom:22px;}
+.light-slider-label{font-size:.78rem;font-weight:500;color:var(--earth);margin-bottom:6px;}
+.light-slider-feel{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:300;color:var(--earth);text-align:center;margin-bottom:8px;min-height:2rem;}
+.light-slider-anchors{display:flex;justify-content:space-between;font-size:.72rem;color:var(--tl);font-style:italic;margin-bottom:8px;}
+.light-note{margin-bottom:20px;}
+.light-note-label{font-size:.72rem;color:var(--tl);margin-bottom:6px;font-style:italic;}
+.light-watching{display:flex;justify-content:center;gap:16px;margin:20px 0;opacity:.6;}
+.light-watching-persona{text-align:center;font-size:.72rem;color:var(--tl);}
+.light-watching-emoji{font-size:1.1rem;display:block;margin-bottom:2px;}
+/* ── Light feedback ── */
+.light-feedback-wrap{animation:fadeIn .4s ease;}
+.light-msg{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px;}
+.light-msg-bubble{border-radius:4px 18px 18px 18px;padding:16px 20px;border-width:1px;border-style:solid;font-size:.9rem;line-height:1.75;flex:1;}
+.light-msg-bubble-sleep{background:var(--sl-l);border-color:var(--sl-b);color:#1A3038;}
+.light-msg-bubble-stress{background:var(--st-l);border-color:var(--st-b);color:#2A1E3A;}
+.light-msg-bubble-nutrition{background:var(--nu-l);border-color:var(--nu-b);color:#3A2010;}
+.light-msg-bubble-exercise{background:var(--ex-l);border-color:var(--ex-b);color:#1A301A;}
+.light-watching-row{display:flex;justify-content:center;gap:20px;padding:12px 0;border-top:1px solid var(--stone);margin-top:8px;}
+.light-watching-item{display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--tl);}
+/* ── Chapter close ── */
+.chapter-close-screen{text-align:center;padding:16px 0;}
+.cc-ornament{font-size:2rem;margin-bottom:16px;opacity:.7;}
+.cc-label{font-size:.68rem;letter-spacing:.25em;text-transform:uppercase;color:var(--moss);font-weight:500;margin-bottom:10px;}
+.cc-title{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:300;color:var(--earth);margin-bottom:8px;line-height:1.3;}
+.cc-sub{font-size:.85rem;color:var(--tl);margin-bottom:28px;font-style:italic;}
+.cc-message{background:var(--white);border:1px solid var(--stone);border-radius:16px;padding:28px 30px;margin-bottom:20px;box-shadow:0 2px 20px rgba(74,55,40,.07);font-size:.92rem;line-height:1.85;color:var(--text);text-align:left;}
+.cc-message p{margin-bottom:14px;}.cc-message p:last-child{margin-bottom:0;}
+.cc-team{display:flex;justify-content:center;gap:12px;margin-bottom:28px;}
+.cc-team-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;border:1.5px solid transparent;}
+.cc-team-avatar-sleep{background:var(--sl-l);border-color:var(--sl-b);}
+.cc-team-avatar-stress{background:var(--st-l);border-color:var(--st-b);}
+.cc-team-avatar-nutrition{background:var(--nu-l);border-color:var(--nu-b);}
+.cc-team-avatar-exercise{background:var(--ex-l);border-color:var(--ex-b);}
+.cc-next-label{font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--tl);margin-bottom:16px;}
 .slider-screen{text-align:center;padding:8px 0 24px;}
 .slider-screen h2{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;color:var(--earth);margin-bottom:10px;}
 .slider-screen p{font-size:.88rem;color:var(--tl);line-height:1.7;margin-bottom:32px;}
@@ -323,6 +377,110 @@ input[type=range].wellness-slider::-moz-range-thumb{width:26px;height:26px;borde
     </div>
     <div id="switch-user-link" style="display:none;text-align:center;margin-top:10px;">
       <button class="btn-ghost" onclick="switchUser()" style="font-size:.8rem;color:var(--tl);">Not you? Switch user</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Session gate ── -->
+<div id="s-gate" class="screen">
+  <div class="gate-screen">
+    <div class="gate-icon">📋</div>
+    <div class="gate-title">Your weekly check-in is ready</div>
+    <div class="gate-sub">This takes about five minutes. Your team will review your week and give you their full assessment.</div>
+    <div class="gate-persona-focus" id="gate-focus">
+      <div class="gate-persona-focus-avatar" id="gate-focus-avatar">🌙</div>
+      <div>
+        <div class="gate-persona-focus-name" id="gate-focus-name">The Restorer</div>
+        <div class="gate-persona-focus-text" id="gate-focus-text">Watching your sleep and recovery this week.</div>
+      </div>
+    </div>
+    <button class="gate-btn-primary" onclick="startDeepSession()">Yes, let's go &rarr;</button>
+    <button class="gate-btn-light" onclick="startLightSession()">Not today — quick check-in instead</button>
+  </div>
+</div>
+
+<!-- ── Light session ── -->
+<div id="s-light" class="screen">
+  <div class="light-header">
+    <div class="lh-icon" id="light-icon">🌙</div>
+    <div class="lh-title">Just a quick one today</div>
+    <div class="lh-sub">That's fine — your team is still watching.</div>
+  </div>
+  <div class="light-focus" id="light-focus">
+    <div class="light-focus-label">This week your team is focused on</div>
+    <div id="light-focus-text">Sleep and recovery</div>
+  </div>
+  <div class="light-sliders">
+    <div class="light-slider-row">
+      <div class="light-slider-feel" id="light-wellness-feel">Getting by</div>
+      <div class="light-slider-anchors"><span>Struggling</span><span>Thriving</span></div>
+      <input type="range" class="wellness-slider" id="light-wellness-slider" min="1" max="10" value="5" oninput="lightSliderMove('wellness',this.value)"/>
+      <div class="light-slider-label" style="text-align:center;margin-top:8px;">Overall wellness</div>
+    </div>
+    <div class="light-slider-row">
+      <div class="light-slider-feel" id="light-energy-feel">Moderate</div>
+      <div class="light-slider-anchors"><span>Depleted</span><span>Energised</span></div>
+      <input type="range" class="wellness-slider" id="light-energy-slider" min="1" max="10" value="5" oninput="lightSliderMove('energy',this.value)"/>
+      <div class="light-slider-label" style="text-align:center;margin-top:8px;">Energy</div>
+    </div>
+  </div>
+  <div class="light-note">
+    <div class="light-note-label">Anything on your mind? (optional)</div>
+    <textarea class="ob-textarea" id="light-note-text" placeholder="A few words if you'd like..." style="min-height:60px;"></textarea>
+  </div>
+  <button class="btn" onclick="submitLightSession()">Get my reflection &rarr;</button>
+</div>
+
+<!-- ── Light feedback ── -->
+<div id="s-light-feedback" class="screen">
+  <div class="chat-header">
+    <div class="ch-label" id="light-fb-label">Your team · today</div>
+    <div class="ch-title" id="light-fb-title">A quick word</div>
+  </div>
+  <div id="light-fb-loading" class="msg">
+    <div class="msg-avatar msg-avatar-sleep" id="light-loading-avatar">🌙</div>
+    <div class="msg-content">
+      <div class="msg-meta">
+        <span class="msg-name msg-name-sleep" id="light-loading-name">The Restorer</span>
+        <span class="msg-tagline" id="light-loading-tagline">· Sleep & recovery</span>
+      </div>
+      <div class="msg-bubble msg-bubble-loading">
+        <div class="loading" style="padding:8px 0;text-align:left;">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <div class="ltext">Reading today's data...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="light-fb-content" style="display:none" class="light-feedback-wrap"></div>
+  <div class="fb-actions" id="light-fb-actions" style="display:none">
+    <button class="btn-ghost" onclick="restart()">&#8592; New check-in</button>
+    <button class="btn-ghost" onclick="showHistory()">Your journey</button>
+    <button class="btn-ghost" onclick="changeKey()">Switch user</button>
+  </div>
+</div>
+
+<!-- ── Chapter close ── -->
+<div id="s-chapter-close" class="screen">
+  <div class="chapter-close-screen">
+    <div class="cc-ornament">✦</div>
+    <div class="cc-label" id="cc-label">Chapter complete</div>
+    <div class="cc-title" id="cc-title">A month with your team</div>
+    <div class="cc-sub" id="cc-sub">Your team has been watching. Here's what they want to say.</div>
+    <div class="cc-team">
+      <div class="cc-team-avatar cc-team-avatar-sleep">🌙</div>
+      <div class="cc-team-avatar cc-team-avatar-stress">🌿</div>
+      <div class="cc-team-avatar cc-team-avatar-nutrition">🌾</div>
+      <div class="cc-team-avatar cc-team-avatar-exercise">⚡</div>
+    </div>
+    <div id="cc-loading" class="loading" style="padding:20px 0;text-align:center;">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <div class="ltext">Your team is reflecting on your journey...</div>
+    </div>
+    <div id="cc-message" class="cc-message" style="display:none"></div>
+    <div id="cc-actions" style="display:none">
+      <div class="cc-next-label">Ready for Chapter <span id="cc-next-num">2</span></div>
+      <button class="btn" onclick="startNewChapter()">Begin Chapter <span id="cc-next-num2">2</span> &rarr;</button>
     </div>
   </div>
 </div>
@@ -661,7 +819,7 @@ input[type=range].wellness-slider::-moz-range-thumb{width:26px;height:26px;borde
   </div>
 </div>
 
-<footer>Stillwell prototype &middot; for demonstration purposes only &middot; v2.1</footer>
+<footer>Stillwell prototype &middot; for demonstration purposes only</footer>
 </div>
 <script>
 var P={
@@ -748,6 +906,9 @@ function rangeCtx(val,low,high,unit,higherBetter){
 }
 
 var apiKey='',userName='',health=null,sawMetrics=false,sel={},openText='',cQs=[],bQs=[],persona=null;
+var sessionType='deep'; // 'light' or 'deep'
+var energyScore=5,isLightSession=false;
+var SW_CHAPTER_KEY='stillwell_chapter';
 var obData={why:'',vision:'',baseline:{sleep:'',stress:'',nutrition:'',exercise:''},age:null,sex:'',activityLevel:''};
 var SW_OB_KEY='stillwell_onboarding';
 
@@ -755,83 +916,108 @@ var CQB=[
   {pillar:'sleep',key:'energy',text:'How would you describe your energy right now?',opts:['Depleted','Low but steady','Moderate','Good','Energised']},
   {pillar:'sleep',key:'wake',text:'How did waking up feel this morning?',opts:['Groggy and reluctant','Sluggish','Neutral','Refreshed','Ready to go']},
   {pillar:'sleep',key:'sleepsense',text:'How did you sleep, in your own sense of it?',opts:['Poorly','Restless','Okay','Well','Deeply']},
-  {pillar:'sleep',key:'dip',text:'Are you noticing an afternoon energy dip today?',opts:['Already fading','Starting to flag','Holding steady','Feeling sharp','No dip']},
+  {pillar:'sleep',key:'dip',text:'Are you noticing an afternoon energy dip today?',opts:['Already fading','Starting to flag','Holding steady','Feeling sharp','No dip at all']},
+  {pillar:'sleep',key:'restored',text:'Do you feel restored after last night?',opts:['Not at all','Barely','Somewhat','Mostly','Fully']},
+  {pillar:'sleep',key:'dreamed',text:'Did you wake in the night or feel your sleep was broken?',opts:['Several times','Once or twice','Briefly','Not that I noticed','Slept straight through']},
+  {pillar:'sleep',key:'sleepmood',text:'How is your mood relative to how rested you feel?',opts:['Low and flat','A bit low','Neutral','Reasonable','Light and positive']},
+  {pillar:'sleep',key:'alertness',text:'How alert are you feeling right now?',opts:['Foggy','Slow','Getting there','Alert','Very sharp']},
+  {pillar:'sleep',key:'yawning',text:'How often are you yawning or craving rest?',opts:['Constantly','Frequently','Occasionally','Rarely','Not at all']},
+  {pillar:'sleep',key:'eyefeel',text:'How do your eyes feel today?',opts:['Heavy and sore','Tired','Normal','Bright','Wide open']},
   {pillar:'stress',key:'stress',text:'Where is your stress sitting today?',opts:['Very high','Elevated','Background hum','Low','At ease']},
   {pillar:'stress',key:'mind',text:'How would you describe the quality of your thinking?',opts:['Scattered and racing','Unfocused','Manageable','Clear','Calm and sharp']},
   {pillar:'stress',key:'capacity',text:'How does your capacity feel for handling today?',opts:['Running on empty','Stretched thin','Getting by','Capable','Resilient']},
   {pillar:'stress',key:'tension',text:'Are you carrying any tension in your body right now?',opts:['Quite a lot','Some tightness','A little','Barely any','None at all']},
+  {pillar:'stress',key:'overwhelm',text:'How close to overwhelmed do you feel today?',opts:['Very close','Edging there','Manageable','Comfortable','Far from it']},
+  {pillar:'stress',key:'breath',text:'How would you describe your breathing right now?',opts:['Tight and shallow','A little restricted','Normal','Easy','Slow and deep']},
+  {pillar:'stress',key:'worrying',text:'How much are you caught in thoughts or worries today?',opts:['Consumed by them','More than usual','Background noise','A little','Not at all']},
+  {pillar:'stress',key:'groundedness',text:'How grounded and present do you feel right now?',opts:['Disconnected','Scattered','Somewhere in between','Fairly present','Fully grounded']},
+  {pillar:'stress',key:'irritability',text:'How is your patience and emotional steadiness today?',opts:['Very short fuse','Easily irritated','Variable','Mostly steady','Calm throughout']},
+  {pillar:'stress',key:'control',text:'How much in control of your day do you feel?',opts:['Not at all','Very little','Somewhat','Mostly','Completely']},
   {pillar:'nutrition',key:'hunger',text:'How are you feeling around food and hunger today?',opts:['Craving everything','Hungrier than usual','Normal','Not very hungry','No appetite']},
   {pillar:'nutrition',key:'hydration',text:'How well hydrated do you feel today?',opts:['Quite dehydrated','Could drink more','Okay','Well hydrated','Drinking plenty']},
+  {pillar:'nutrition',key:'energyfood',text:'How well did food fuel you yesterday?',opts:['Left me flat','Uneven energy','Okay','Fuelled me well','Felt nourished all day']},
+  {pillar:'nutrition',key:'gut',text:'How is your digestion or gut feeling today?',opts:['Unsettled','A bit off','Normal','Comfortable','Really good']},
+  {pillar:'nutrition',key:'cravings',text:'Are you experiencing any food cravings right now?',opts:['Intense cravings','Noticeable cravings','Mild urges','Barely any','None']},
+  {pillar:'nutrition',key:'mealtime',text:'How regular were your meal times yesterday?',opts:['Skipped meals','Very irregular','Somewhat irregular','Mostly regular','Consistent and timed']},
+  {pillar:'nutrition',key:'mindful',text:'How mindfully did you eat yesterday?',opts:['On the go all day','Rushed most meals','Mixed','Fairly mindful','Ate slowly and enjoyed it']},
+  {pillar:'nutrition',key:'variety',text:'How much variety and colour was in what you ate yesterday?',opts:['Very little','Not much','Some','Good variety','Wide range of foods']},
+  {pillar:'nutrition',key:'sugarcrash',text:'Did you experience any energy crashes from food yesterday?',opts:['Several times','Once or twice','Possibly','Not really','Not at all']},
+  {pillar:'nutrition',key:'satisfaction',text:'How satisfied did you feel after eating yesterday?',opts:['Still hungry all day','Often unsatisfied','Mixed','Usually satisfied','Consistently satisfied']},
   {pillar:'exercise',key:'bodyready',text:'How does your body feel about moving today?',opts:['Needs rest','Heavy and reluctant','Neutral','Ready to move','Keen to exercise']},
   {pillar:'exercise',key:'muscles',text:'How are your muscles and joints feeling?',opts:['Sore or stiff','A little tight','Normal','Loose and good','Strong and mobile']},
-  {pillar:null,key:'open',text:'Anything else on your mind?',opts:null,optional:true}
+  {pillar:'exercise',key:'motivation',text:'How motivated do you feel to be physically active today?',opts:['Zero motivation','Low','Indifferent','Fairly motivated','Raring to go']},
+  {pillar:'exercise',key:'recovery',text:'How recovered do you feel from recent exercise?',opts:['Still fatigued','Somewhat tired','Okay','Recovered','Fully fresh']},
+  {pillar:'exercise',key:'vitality',text:'How physically vital and alive do you feel today?',opts:['Flat and heavy','Below par','Average','Good','Vibrant']},
+  {pillar:'exercise',key:'posture',text:'How is your posture and physical bearing today?',opts:['Slumped and tight','Hunched','Neutral','Upright','Tall and open']},
+  {pillar:'exercise',key:'strength',text:'How strong do you feel physically today?',opts:['Very weak','Below my normal','Average','Strong','At my best']},
+  {pillar:'exercise',key:'restless',text:'Does your body feel restless or in need of movement?',opts:['Completely restless','A bit fidgety','Neutral','Content to rest','Happy to be still']},
+  {pillar:'exercise',key:'outdoors',text:'Did you get any fresh air or time outdoors yesterday?',opts:['None at all','Very briefly','A little','A fair amount','Plenty']},
+  {pillar:null,key:'open',text:'Anything else on your mind today?',opts:null,optional:true}
 ];
 var BQB=[
   {pillar:'stress',key:'pace',text:'How would you describe the pace of yesterday?',opts:['Relentless','Busy but managed','Steady','Gentle','Quiet']},
   {pillar:'stress',key:'downtime',text:'Did you get any real downtime yesterday?',opts:['None at all','Very little','A short window','Some time','Plenty']},
-  {pillar:'stress',key:'social',text:'How did your social interactions feel yesterday?',opts:['Draining','Somewhat tiring','Neutral','Energising','Mostly solitude']},
+  {pillar:'stress',key:'social',text:'How did your social interactions feel yesterday?',opts:['Draining','Somewhat tiring','Neutral','Energising','Mostly solitude — in a good way']},
   {pillar:'stress',key:'winddown',text:'How well did you wind down before bed?',opts:['Went to bed wired','Struggled to switch off','Okay','Wound down well','Very calm']},
+  {pillar:'stress',key:'moments',text:'Did you have any moments of genuine enjoyment yesterday?',opts:['None','Very few','One or two','Several','Plenty']},
+  {pillar:'stress',key:'boundaries',text:'How well did you protect your own time and energy yesterday?',opts:['Not at all','Poorly','Somewhat','Pretty well','Very well']},
   {pillar:'sleep',key:'screens',text:'Screen time in the hour before bed?',opts:['None','A little','Quite a bit','Most of the evening']},
   {pillar:'sleep',key:'bedtime',text:'What time did you go to bed compared to usual?',opts:['Much later','A little later','About normal','A little earlier','Earlier than usual']},
   {pillar:'sleep',key:'sleepenv',text:'How was your sleep environment last night?',opts:['Too warm or noisy','A bit unsettled','About normal','Quiet and comfortable','Ideal']},
+  {pillar:'sleep',key:'prebedritual',text:'Did you have any kind of wind-down routine before bed?',opts:['None','Brief','Partial','Yes, mostly','Consistent and effective']},
+  {pillar:'sleep',key:'worknightbefore',text:'How much work or stimulating activity did you do in the evening?',opts:['Working until bed','Quite a lot','Some','Very little','None after dinner']},
   {pillar:'nutrition',key:'eating',text:'How late did you eat your last meal?',opts:['Before 6pm','Around 7pm','Around 8-9pm','After 9pm']},
   {pillar:'nutrition',key:'alcohol',text:'Did you have any alcohol yesterday?',opts:['None','One drink','A couple','More than a couple'],optional:true},
   {pillar:'nutrition',key:'mealq',text:'How would you describe the quality of what you ate?',opts:['Grabbed what I could','Fairly poor','Mixed','Pretty good','Nourishing and balanced']},
   {pillar:'nutrition',key:'caffeine',text:'How much caffeine, and how late?',opts:['None','Morning only','Into the afternoon','Late afternoon or evening']},
+  {pillar:'nutrition',key:'breakfast',text:'Did you eat breakfast yesterday?',opts:['Skipped it','Very late','Something small','A proper breakfast','Early and nourishing']},
+  {pillar:'nutrition',key:'water',text:'How much water did you drink yesterday?',opts:['Barely any','Less than usual','About normal','More than usual','Plenty all day']},
   {pillar:'exercise',key:'movement',text:'Did you move your body or get outdoors yesterday?',opts:['No movement','A short walk','Moderate activity','Quite active','Intense exercise'],optional:true},
-  {pillar:'exercise',key:'sitting',text:'How much of yesterday did you spend sitting?',opts:['Almost all day','Most of the day','Mixed','Fairly active','Mostly on my feet']}
+  {pillar:'exercise',key:'sitting',text:'How much of yesterday did you spend sitting?',opts:['Almost all day','Most of the day','Mixed','Fairly active','Mostly on my feet']},
+  {pillar:'exercise',key:'intentional',text:'Did you do any intentional exercise yesterday?',opts:['None','Light stretching or walking','Moderate workout','Strong session','Very intense training']},
+  {pillar:'exercise',key:'breaks',text:'Did you take movement breaks during the day?',opts:['Never got up','Once or twice','A few times','Regularly','Consistently every hour']},
+  {pillar:'exercise',key:'energy_ex',text:'How did physical activity affect your energy yesterday?',opts:['Drained me','Left me flat','Neutral','Boosted it','Significantly energised me']}
 ];
 
-function scorePillars(){
-  var s={sleep:0,stress:0,nutrition:0,exercise:0};
-  var d=health||{};
-  // Use personalised midpoints from reference ranges if onboarding available,
-  // otherwise fall back to general population midpoints for scoring only
-  var ob=loadOnboarding();
-  var band=getAgeBand(ob&&ob.age?parseInt(ob.age):null)||'35-49';
-  var skey=getSexKey(ob&&ob.sex?ob.sex:'');
-  var rhrRef=REF.rhr[band][skey]||REF.rhr[band].neutral;
-  var hrvRef=REF.hrv[band][skey]||REF.hrv[band].neutral;
-  var sleepRef=REF.sleep[band];
-  var rhrMid=(rhrRef.low+rhrRef.high)/2;
-  var hrvMid=(hrvRef.low+hrvRef.high)/2;
-  var sleepMid=(sleepRef.low+sleepRef.high)/2;
-  var stepsMid=8000,exMid=25;
-  function pdev(val,avg){return val!=null&&!isNaN(val)?(avg-val)/avg:0;}
-  function ndev(val,avg){return val!=null&&!isNaN(val)?(val-avg)/avg:0;}
-  var sd=pdev(d.sleep,sleepMid);if(sd>0.08)s.sleep+=sd*40;
-  var rd=ndev(d.rhr,rhrMid);if(rd>0.05)s.stress+=rd*30;
-  var hd=pdev(d.hrv,hrvMid);if(hd>0.05)s.stress+=hd*35;
-  var ed=pdev(d.ex,exMid);if(ed>0.10)s.exercise+=ed*25;
-  var stepd=pdev(d.steps,stepsMid);if(stepd>0.10)s.exercise+=stepd*20;
-  var neg={
-    sleep:['Depleted','Low but steady','Groggy and reluctant','Sluggish','Poorly','Restless','Already fading','Starting to flag'],
-    stress:['Very high','Elevated','Background hum','Scattered and racing','Unfocused','Running on empty','Stretched thin','Quite a lot','Some tightness'],
-    nutrition:['Quite dehydrated','Could drink more','Craving everything','Hungrier than usual','After 9pm','Around 8-9pm','More than a couple','A couple','Late afternoon or evening','Grabbed what I could','Fairly poor'],
-    exercise:['Needs rest','Heavy and reluctant','Sore or stiff','A little tight','No movement','A short walk','Almost all day','Most of the day']
-  };
-  Object.keys(sel).forEach(function(k){var v=sel[k];Object.keys(neg).forEach(function(p){if(neg[p].indexOf(v)>=0)s[p]+=12;});});
-  var winner='sleep',high=-1;
-  Object.keys(s).forEach(function(p){if(s[p]>high){high=s[p];winner=p;}});
-  return{winner:winner,scores:s};
-}
+var SW_QR_KEY='stillwell_qrotation';
+function loadQRotation(){try{var r=localStorage.getItem(SW_QR_KEY);return r?JSON.parse(r):{cq:[],bq:[]};}catch(e){return{cq:[],bq:[]};}}
+function saveQRotation(r){try{localStorage.setItem(SW_QR_KEY,JSON.stringify(r));}catch(e){}}
 
-function pickCQs(){
+function pickCQs(isLight){
+  if(isLight)return [];
+  var rotation=loadQRotation();
+  var used=rotation.cq||[];
   var req=CQB.filter(function(q){return q.key==='energy';});
   var open=CQB.filter(function(q){return q.key==='open';});
   var pool=CQB.filter(function(q){return q.key!=='energy'&&q.key!=='open';});
-  return req.concat(pool.sort(function(){return Math.random()-.5;}).slice(0,3)).concat(open);
+  var fresh=pool.filter(function(q){return used.indexOf(q.key)===-1;});
+  if(fresh.length<3){used=[];fresh=pool;}
+  var picked=fresh.sort(function(){return Math.random()-.5;}).slice(0,3);
+  var newUsed=used.concat(picked.map(function(q){return q.key;}));
+  rotation.cq=newUsed.slice(-20);
+  saveQRotation(rotation);
+  return req.concat(picked).concat(open);
 }
-function pickBQs(){
+function pickBQs(isLight){
+  if(isLight)return [];
+  var rotation=loadQRotation();
+  var used=rotation.bq||[];
   var picked=[];
   ['stress','sleep','nutrition','exercise'].forEach(function(p){
     var pool=BQB.filter(function(q){return q.pillar===p;});
-    picked.push(pool[Math.floor(Math.random()*pool.length)]);
+    var fresh=pool.filter(function(q){return used.indexOf(q.key)===-1;});
+    if(fresh.length===0)fresh=pool;
+    picked.push(fresh[Math.floor(Math.random()*fresh.length)]);
   });
-  var rest=BQB.filter(function(q){return picked.indexOf(q)===-1;});
-  picked.push(rest[Math.floor(Math.random()*rest.length)]);
+  var rest=BQB.filter(function(q){return picked.indexOf(q)===-1&&used.indexOf(q.key)===-1;});
+  if(rest.length===0)rest=BQB.filter(function(q){return picked.indexOf(q)===-1;});
+  if(rest.length>0)picked.push(rest[Math.floor(Math.random()*rest.length)]);
+  var newUsed=used.concat(picked.map(function(q){return q.key;}));
+  rotation.bq=newUsed.slice(-20);
+  saveQRotation(rotation);
   return picked;
 }
+
 function renderQs(qs,cid,pfx){
   var c=document.getElementById(cid);c.innerHTML='';
   qs.forEach(function(q,i){
@@ -1290,7 +1476,7 @@ function loadWelcomeMessage(){
 }
 
 function finishOnboarding(){
-  show('s-datasource');
+  routeSession();
 }
 
 // ── History ─────────────────────────────────────────────────────
@@ -1450,7 +1636,7 @@ function sliderMove(val){
   document.getElementById('slider-feel').textContent=FEEL_LABELS[wellnessScore]||'';
 }
 function submitSlider(){
-  show('s-datasource');
+  routeSession();
 }
 function switchUser(){
   // Clear name and onboarding but keep sessions (they belong to the device)
@@ -1465,11 +1651,126 @@ function switchUser(){
 }
 // ────────────────────────────────────────────────────────────────
 
+// ── Chapter & session routing ────────────────────────────────────
+function loadChapter(){
+  try{var r=localStorage.getItem(SW_CHAPTER_KEY);return r?JSON.parse(r):{num:1,deepCount:0,closePending:false};}catch(e){return{num:1,deepCount:0,closePending:false};}
+}
+function saveChapter(ch){try{localStorage.setItem(SW_CHAPTER_KEY,JSON.stringify(ch));}catch(e){}}
+
+function getLastDeepSessionDate(){
+  var sessions=loadSessions();
+  var deep=sessions.filter(function(s){return s.sessionType==='deep'||!s.sessionType;});
+  return deep.length>0?deep[0].date:null;
+}
+
+function daysSinceLastDeep(){
+  var d=getLastDeepSessionDate();
+  if(!d)return 999;
+  return daysSince(d);
+}
+
+function routeSession(){
+  // Check if chapter close is pending
+  var ch=loadChapter();
+  if(ch.closePending){
+    showChapterClose();
+    return;
+  }
+  // Determine if deep session is due
+  var daysSince=daysSinceLastDeep();
+  var deepDue=daysSince>=7;
+  if(deepDue){
+    // Show gate — offer deep or light
+    showSessionGate();
+  } else {
+    // Light session
+    isLightSession=true;
+    sessionType='light';
+    show('s-light');
+    initLightSession();
+  }
+}
+
+function showSessionGate(){
+  // Populate gate with lead persona from most recent session or default
+  var sessions=loadSessions();
+  var leadKey='sleep';
+  if(sessions.length>0&&sessions[0].lead)leadKey=sessions[0].lead;
+  var lp=P[leadKey];
+  document.getElementById('gate-focus-avatar').textContent=EMO[lp.emoji];
+  document.getElementById('gate-focus-name').textContent=lp.name;
+  document.getElementById('gate-focus-text').textContent='Watching your '+lp.key+' and recovery this week.';
+  show('s-gate');
+}
+
+function startDeepSession(){
+  isLightSession=false;
+  sessionType='deep';
+  show('s-datasource');
+}
+
+function startLightSession(){
+  isLightSession=true;
+  sessionType='light';
+  show('s-light');
+  initLightSession();
+}
+
+var ENERGY_LABELS={1:'Depleted',2:'Depleted',3:'Low',4:'Low',5:'Moderate',6:'Holding steady',7:'Holding steady',8:'Good energy',9:'Good energy',10:'Energised'};
+
+function initLightSession(){
+  // Reset sliders
+  wellnessScore=5;energyScore=5;
+  var ws=document.getElementById('light-wellness-slider');if(ws)ws.value=5;
+  var es=document.getElementById('light-energy-slider');if(es)es.value=5;
+  var wf=document.getElementById('light-wellness-feel');if(wf)wf.textContent='Getting by';
+  var ef=document.getElementById('light-energy-feel');if(ef)ef.textContent='Moderate';
+  var nt=document.getElementById('light-note-text');if(nt)nt.value='';
+  // Set focus from last lead persona
+  var sessions=loadSessions();
+  var leadKey='sleep';
+  if(sessions.length>0&&sessions[0].lead)leadKey=sessions[0].lead;
+  var lp=P[leadKey];
+  document.getElementById('light-icon').textContent=EMO[lp.emoji];
+  document.getElementById('light-focus-text').textContent=lp.name+' is watching your '+lp.key+' this week.';
+}
+
+function lightSliderMove(type,val){
+  val=parseInt(val);
+  if(type==='wellness'){
+    wellnessScore=val;
+    document.getElementById('light-wellness-feel').textContent=FEEL_LABELS[val]||'';
+  } else {
+    energyScore=val;
+    document.getElementById('light-energy-feel').textContent=ENERGY_LABELS[val]||'';
+  }
+}
+
+function submitLightSession(){
+  var noteText=document.getElementById('light-note-text').value.trim();
+  // Use last session's health data if available, otherwise no data
+  var sessions=loadSessions();
+  if(!health&&sessions.length>0&&sessions[0].healthSnapshot){
+    health=sessions[0].healthSnapshot;
+  }
+  getLightFeedback(noteText);
+}
+
+function startNewChapter(){
+  var ch=loadChapter();
+  ch.num=(ch.num||1)+1;
+  ch.deepCount=0;
+  ch.closePending=false;
+  saveChapter(ch);
+  show('s-datasource');
+}
+// ────────────────────────────────────────────────────────────────
+
 function startApp(){
   var err=document.getElementById('err-setup');
   err.style.display='none';
   userName=document.getElementById('user-name').value.trim();
-  cQs=pickCQs();bQs=pickBQs();
+  cQs=pickCQs(false);bQs=pickBQs(false);
   renderQs(cQs,'checkin-qs','c');renderQs(bQs,'behaviour-qs','b');
   var hr=new Date().getHours();
   var timeLabel=hr<12?'Morning check-in':hr<17?'Afternoon check-in':'Evening check-in';
@@ -1479,11 +1780,11 @@ function startApp(){
   var ud=parseURL();
   if(ud){health=ud;document.getElementById('detected-banner').style.display='block';document.getElementById('source-options').style.display='none';}
   document.getElementById('shortcut-url').textContent=window.location.href.split('?')[0]+'?sleep=SLEEP&rhr=RHR&hrv=HRV&resp=RESP&steps=STEPS&cal=CALS&ex=EXMINS&stand=STANDHRS';
-  // Reset slider
-  wellnessScore=5;
+  // Reset sliders
+  wellnessScore=5;energyScore=5;
   var sl=document.getElementById('wellness-slider');if(sl)sl.value=5;
   var sf=document.getElementById('slider-feel');if(sf)sf.textContent='Getting by';
-  // Route to onboarding if first time, otherwise slider first
+  // Route: onboarding first time, then session type
   var ob=loadOnboarding();
   if(!ob){
     show('s-onboarding');
@@ -1520,6 +1821,137 @@ function showMetrics(){
   document.querySelector('.m-choice').style.display='none';
   window.scrollTo(0,0);
 }
+
+// ── Light session feedback ───────────────────────────────────────
+async function getLightFeedback(noteText){
+  var pastSessions=loadSessions();
+  var sessionNum=pastSessions.length+1;
+  var sc=scorePillars();
+  var lp=P[sc.winner];
+  persona=lp;
+
+  // Setup light feedback screen
+  document.getElementById('light-loading-avatar').className='msg-avatar msg-avatar-'+sc.winner;
+  document.getElementById('light-loading-avatar').textContent=EMO[lp.emoji];
+  document.getElementById('light-loading-name').className='msg-name msg-name-'+sc.winner;
+  document.getElementById('light-loading-name').textContent=lp.name;
+  document.getElementById('light-loading-tagline').textContent=lp.tagline;
+  document.getElementById('light-fb-label').textContent='Your team · '+new Date().toLocaleDateString('en-GB',{weekday:'long'});
+  document.getElementById('light-fb-title').textContent='Just a quick one';
+  document.getElementById('light-fb-loading').style.display='flex';
+  document.getElementById('light-fb-content').style.display='none';
+  document.getElementById('light-fb-actions').style.display='none';
+  show('s-light-feedback');
+
+  var historyCtx=buildHistoryContext(pastSessions.slice(0,7));
+  var ob=loadOnboarding();
+  var dataCtx=buildCtx();
+  var nameAddr=userName?userName:'';
+  var namingRule='Address the user directly as "you". '+(nameAddr?'Use their name ('+nameAddr+') once only at the start. After that, use "you" only.':'Do not use a name.');
+  var langTier=sessionNum<=2?'baseline':sessionNum<=6?'trends':'averages';
+  var langRule=sessionNum<=2
+    ?'LANGUAGE RULE: Speak only to today\'s data. No trends or averages.'
+    :sessionNum<=6
+    ?'LANGUAGE RULE: You may note emerging patterns but do not claim averages.'
+    :'LANGUAGE RULE: You may reference trends and averages where supported by session history.';
+
+  var prompt=lp.voice+'\n\nThis is a brief daily check-in for '+(nameAddr||'a user')+'. Keep your response to two to three sentences only — warm, direct, specific to what you see today. This is not a full assessment.\n\n'+namingRule+'\n\n--- TODAY\'S SLIDERS ---\nWellness: '+wellnessScore+'/10 ('+FEEL_LABELS[wellnessScore]+')\nEnergy: '+energyScore+'/10 ('+ENERGY_LABELS[energyScore]+')\n'+(noteText?'In their own words: "'+noteText+'"':'')+'\n\n--- WEARABLE DATA ---\n'+dataCtx+'\n\n'+(historyCtx?'--- RECENT SESSIONS ---\n'+historyCtx+'\n\n':'')+langRule+'\n\nCLINICAL DISCLAIMER: You are a wellness coach, not a clinician. Never diagnose, never alarm.\n\n'+(ob&&ob.why?'--- USER PROFILE ---\nAge band: '+(ob.ageBand||'unknown')+'\nWhy they came: '+ob.why:'')+'Write your brief daily message now. Two to three sentences maximum. No labels, no headers, no actions — just a warm, direct observation that makes them feel seen.';
+
+  try{
+    var res=await fetch('/api/proxy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:250,messages:[{role:'user',content:prompt}]})});
+    var d=await res.json();
+    if(!res.ok)throw new Error(d&&d.error&&d.error.message||'API error');
+    var text=(d.content&&d.content[0]&&d.content[0].text)||'Your team is watching — come back for your full session soon.';
+
+    document.getElementById('light-fb-loading').style.display='none';
+    var wrap=document.getElementById('light-fb-content');
+    // Lead persona message
+    var watchingHtml=['sleep','stress','nutrition','exercise'].filter(function(p){return p!==sc.winner;}).map(function(p){
+      return '<div class="light-watching-item">'+EMO[P[p].emoji]+' <span>'+P[p].name+'</span></div>';
+    }).join('');
+    wrap.innerHTML=
+      '<div class="light-msg">'+
+        '<div class="msg-avatar msg-avatar-'+sc.winner+'">'+EMO[lp.emoji]+'</div>'+
+        '<div class="msg-content">'+
+          '<div class="msg-meta"><span class="msg-name msg-name-'+sc.winner+'">'+lp.name+'</span><span class="msg-tagline">· '+lp.tagline+'</span></div>'+
+          '<div class="light-msg-bubble light-msg-bubble-'+sc.winner+'">'+text+'</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="light-watching-row">'+watchingHtml+'</div>';
+    wrap.style.display='block';
+    document.getElementById('light-fb-actions').style.display='flex';
+
+    // Save light session record
+    saveSession({
+      num:sessionNum,
+      date:new Date().toISOString(),
+      name:userName||null,
+      lead:sc.winner,
+      leadName:lp.name,
+      leadEmoji:EMO[lp.emoji],
+      sessionType:'light',
+      wellnessScore:wellnessScore,
+      energyScore:energyScore,
+      scores:{sleep:Math.round(sc.scores.sleep),stress:Math.round(sc.scores.stress),nutrition:Math.round(sc.scores.nutrition),exercise:Math.round(sc.scores.exercise)},
+      headline:'Light check-in. Wellness: '+wellnessScore+'/10, Energy: '+energyScore+'/10.',
+      actions:[]
+    });
+
+  }catch(e){
+    document.getElementById('light-fb-loading').style.display='none';
+    document.getElementById('light-fb-content').innerHTML='<div class="err">'+e.message+'</div>';
+    document.getElementById('light-fb-content').style.display='block';
+    document.getElementById('light-fb-actions').style.display='flex';
+  }
+}
+
+// ── Chapter close ────────────────────────────────────────────────
+function showChapterClose(){
+  var ch=loadChapter();
+  var chNum=ch.num||1;
+  document.getElementById('cc-label').textContent='Chapter '+chNum+' complete';
+  var monthLabels={1:'A month with your team',2:'Another month',3:'Three months in',4:'Four months',5:'Five months',6:'Half a year'};
+  document.getElementById('cc-title').textContent=monthLabels[chNum]||'Chapter '+chNum+' complete';
+  document.getElementById('cc-next-num').textContent=chNum+1;
+  document.getElementById('cc-next-num2').textContent=chNum+1;
+  document.getElementById('cc-loading').style.display='block';
+  document.getElementById('cc-message').style.display='none';
+  document.getElementById('cc-actions').style.display='none';
+  show('s-chapter-close');
+  getChapterCloseMessage(ch);
+}
+
+async function getChapterCloseMessage(ch){
+  var sessions=loadSessions();
+  var chapterSessions=sessions.filter(function(s){return (s.sessionType==='deep'||!s.sessionType);}).slice(0,4);
+  var historyCtx=buildHistoryContext(chapterSessions);
+  var ob=loadOnboarding();
+  var nameAddr=userName?userName:'';
+  var chNum=ch.num||1;
+
+  var prompt='You are the collective voice of the Stillwell wellness team — The Restorer, The Steadier, The Nourisher, and The Energiser — speaking together as one at the end of Chapter '+chNum+' of '+(nameAddr||'a user')+'\'s journey.\n\nWrite a warm, thoughtful reflection of two to three short paragraphs — maximum 180 words. This is a meaningful moment: the end of a chapter, not just another session.\n\nSpeak directly to '+(nameAddr||'the user')+' as "you".'+(nameAddr?' Use '+nameAddr+'\'s name once near the start.':'')+'\n\nParagraph 1: Acknowledge what the team has seen across this chapter — what stood out, what shifted, or what persisted.\nParagraph 2: Name the most meaningful thing — a genuine change, a pattern that kept showing up, or something the user did that mattered.\nParagraph 3: A warm send-off into the next chapter. Not prescriptive — just forward-looking and human.\n\n--- THIS CHAPTER\'S SESSIONS ---\n'+(historyCtx||'No session history available.')+'\n\n'+(ob&&ob.why?'--- WHY THEY CAME ---\n'+ob.why+(ob.vision?'\nVision: '+ob.vision:''):'')+'\n\nRules: No bullet points. No headers. No clinical language. Warm, human, specific. This should feel like a letter, not a report.';
+
+  try{
+    var res=await fetch('/api/proxy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:400,messages:[{role:'user',content:prompt}]})});
+    var d=await res.json();
+    if(!res.ok)throw new Error(d&&d.error&&d.error.message||'API error');
+    var text=(d.content&&d.content[0]&&d.content[0].text)||'Your team has been watching. They\'re proud of you for showing up.';
+    document.getElementById('cc-loading').style.display='none';
+    var msgEl=document.getElementById('cc-message');
+    msgEl.innerHTML=text.split(/\n\n+/).filter(function(p){return p.trim();}).map(function(p){return '<p>'+p.trim()+'</p>';}).join('');
+    msgEl.style.display='block';
+    document.getElementById('cc-actions').style.display='block';
+    // Mark close as done
+    var ch2=loadChapter();ch2.closePending=false;saveChapter(ch2);
+  }catch(e){
+    document.getElementById('cc-loading').style.display='none';
+    document.getElementById('cc-message').innerHTML='<div class="err">'+e.message+'</div>';
+    document.getElementById('cc-message').style.display='block';
+    document.getElementById('cc-actions').style.display='block';
+    var ch2=loadChapter();ch2.closePending=false;saveChapter(ch2);
+  }
+}
+// ────────────────────────────────────────────────────────────────
 
 async function getFeedback(){
   var sc=scorePillars();persona=P[sc.winner];
@@ -1804,6 +2236,7 @@ async function getFeedback(){
       lead:sc.winner,
       leadName:persona.name,
       leadEmoji:EMO[persona.emoji],
+      sessionType:'deep',
       wellnessScore:wellnessScore,
       scores:{
         sleep:Math.round(sc.scores.sleep),
@@ -1813,9 +2246,30 @@ async function getFeedback(){
       },
       energy:sel['c_energy']||null,
       headline:lp.hl||lp.sum||null,
-      actions:leadActionItems.map(function(a){return a.label+': '+a.text;})
+      actions:leadActionItems.map(function(a){return a.label+': '+a.text;}),
+      healthSnapshot:health?Object.assign({},health):null
     };
     saveSession(sessionRecord);
+
+    // Update chapter tracking and show close button if chapter complete
+    var ch=loadChapter();
+    ch.deepCount=(ch.deepCount||0)+1;
+    if(ch.deepCount>=4){
+      ch.closePending=true;
+      ch.deepCount=0;
+    }
+    saveChapter(ch);
+    if(ch.closePending){
+      var fbActions=document.getElementById('fb-actions');
+      if(fbActions){
+        var ccBtn=document.createElement('button');
+        ccBtn.className='btn';
+        ccBtn.style.cssText='margin:0 auto;display:block;max-width:400px;margin-bottom:12px;';
+        ccBtn.textContent='Read your Chapter '+(ch.num||1)+' reflection →';
+        ccBtn.onclick=function(){showChapterClose();};
+        fbActions.parentNode.insertBefore(ccBtn,fbActions);
+      }
+    }
 
   }catch(e){
     document.getElementById('chat-loading').style.display='none';
@@ -1827,7 +2281,9 @@ async function getFeedback(){
 
 function restart(){
   sel={};openText='';sawMetrics=false;health=null;persona=null;
-  cQs=pickCQs();bQs=pickBQs();
+  isLightSession=false;sessionType='deep';
+  wellnessScore=5;energyScore=5;
+  cQs=pickCQs(false);bQs=pickBQs(false);
   renderQs(cQs,'checkin-qs','c');renderQs(bQs,'behaviour-qs','b');
   document.getElementById('metrics-detail').style.display='none';
   document.querySelector('.m-choice').style.display='flex';
